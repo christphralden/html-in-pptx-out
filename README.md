@@ -106,11 +106,11 @@ sequenceDiagram
     end
     BaseConverter->>Parser: cleanup()
     Note over BaseConverter: PresentationDTO created
-    BaseConverter->>PluginManager: setPresentation(presentation)
     loop Each Slide
         BaseConverter->>PluginManager: executeOnSlide(slide)
         PluginManager-->>BaseConverter: slide
     end
+    BaseConverter->>PluginManager: setPresentation(presentation)
     User->>BaseConverter: export(options)
     BaseConverter->>Serializer: serialize(presentation, options)
     Serializer-->>BaseConverter: ArrayBuffer
@@ -122,9 +122,9 @@ sequenceDiagram
 ```mermaid
 graph LR
     A[HTML String] --> B[Parser]
-    B --> C[Array<ParserElement>]
+    B --> C[ParserElements]
     C --> D[Plugins onParse]
-    D --> E[Array<ElementDTO>]
+    D --> E[ElementDTOs]
     E --> F[PresentationDTO]
     F --> G[Plugins onSlide]
     G --> H[Serializer]
