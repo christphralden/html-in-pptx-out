@@ -27,7 +27,8 @@
       "@/types/*": ["./src/types/*"],
       "@/core/*": ["./src/core/*"],
       "@/plugins/*": ["./src/plugins/*"],
-      "@/utils/*": ["./src/utils/*"]
+      "@/utils/*": ["./src/utils/*"],
+      "@/constants": ["./src/constants.ts"]
     }
   },
   "include": ["src/**/*"],

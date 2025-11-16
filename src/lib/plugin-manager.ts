@@ -1,12 +1,13 @@
 import type {
   Plugin,
-  PluginManager as IPluginManager,
+  PluginManagerInterface,
   PluginContext,
 } from '@/types/plugin.types';
-import type { SlideDTO, PresentationDTO, Config } from '@/types/dto.types';
+import type { SlideDTO, PresentationDTO } from '@/types/presentation.types';
+import type { ParserConfig } from '@/types/config.types';
 import type PptxGenJS from 'pptxgenjs';
 
-export class PluginManager implements IPluginManager {
+export class PluginManager implements PluginManagerInterface {
   private plugins: Plugin[] = [];
 
   register(plugin: Plugin): void {
@@ -16,8 +17,8 @@ export class PluginManager implements IPluginManager {
     this.plugins.push(plugin);
   }
 
-  unregister(pluginName: string): void {
-    const index = this.plugins.findIndex((p) => p.name === pluginName);
+  unregister(name: string): void {
+    const index = this.plugins.findIndex((p) => p.name === name);
     if (index !== -1) {
       this.plugins.splice(index, 1);
     }
@@ -29,7 +30,7 @@ export class PluginManager implements IPluginManager {
 
   async executeBeforeParse(
     html: string,
-    config: Config,
+    config: ParserConfig,
     context: PluginContext
   ): Promise<string> {
     let result = html;

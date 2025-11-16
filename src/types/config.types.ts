@@ -1,51 +1,49 @@
-import type { Config } from './dto.types';
+import { Dimensions } from "./base.types";
+import type { PresentationDTO } from "./presentation.types";
+import type { Plugin, PluginContext } from "./plugin.types";
 
-export interface HtmlToPptxConfig extends Config {
-  parser?: HTMLParser;
-  renderer?: PptxRenderer;
-  enableScripts?: boolean;
-  allowExternalResources?: boolean;
+export interface ParserConfig {
+  selector: string;
+  dimensions: Dimensions;
 }
 
-export interface HTMLParser {
-  parse(html: string, config: Config): Promise<ParsedHTML>;
+export interface PluginConfig {
+  name: string;
+  enabled?: boolean;
+  options?: Record<string, unknown>;
 }
 
-export interface ParsedHTML {
-  slides: HTMLElement[];
-  metadata?: Record<string, string>;
-}
-
-export interface HTMLElement {
-  tag: string;
-  attributes: Record<string, string>;
-  children: HTMLElement[];
-  textContent?: string;
-}
-
-export interface PptxRenderer {
-  render(presentation: any): Promise<ArrayBuffer>;
-}
-
-export interface ExportOptions {
-  format: 'pptx';
+export interface ExportConfig {
+  format: "pptx";
   filename: string;
   path?: string;
   compression?: boolean;
 }
 
-export interface ImageExportOptions {
-  format: 'png' | 'webp' | 'jpg';
+export interface ImageExportConfig {
+  format: "png" | "webp" | "jpg";
   quality?: number;
-  outputDir: string;
-  naming?: (slideIndex: number, slideId: string) => string;
-  width?: number;
-  height?: number;
+  output: {
+    directory: string;
+    naming?: (index: number, id: string) => string;
+  };
+  dimensions?: {
+    width: number;
+    height: number;
+  };
 }
 
-export type HTMLSource = string | HTMLSourceOptions;
+export type HTMLSource = string | HTMLSourceConfig;
 
-export interface HTMLSourceOptions {
-  type: 'string' | 'file' | 'url';
+export interface HTMLSourceConfig {
+  type: "string" | "file" | "url";
   content: string;
+}
+
+export interface ParserStrategy {
+  parse(html: string, config: ParserConfig): Promise<PresentationDTO>;
+}
+
+export interface SerializerStrategy {
+  serialize(presentation: PresentationDTO): Promise<ArrayBuffer>;
 }

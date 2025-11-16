@@ -1,7 +1,7 @@
-import { HtmlToPptx } from '../src/index';
-import { createCustomFontPlugin } from '../src/plugins';
+import { HtmlToPptx } from "../src/index";
+import { createCustomFontPlugin } from "../src/plugins";
 
-const exampleHtml = `
+const EXAMPLE_HTML = `
 <!DOCTYPE html>
 <html>
 <body>
@@ -30,28 +30,28 @@ const exampleHtml = `
 
 async function main() {
   const customFont = createCustomFontPlugin({
-    fontFace: 'Arial',
+    fontFace: "Arial",
     applyToAll: true,
   });
 
   const converter = new HtmlToPptx({
-    slideSelector: '.slide',
-    titleSelector: 'h1',
-    contentSelector: 'p',
+    slideSelector: ".slide",
+    titleSelector: "h1",
+    contentSelector: "p",
   });
 
   await converter
-    .load(exampleHtml)
+    .load(EXAMPLE_HTML)
     .use(customFont)
     .convert()
     .then(() =>
       converter.export({
-        format: 'pptx',
-        filename: 'example-presentation.pptx',
-      })
+        format: "pptx",
+        filename: "example-presentation.pptx",
+      }),
     );
 
-  console.log('Presentation created successfully!');
+  console.log("Presentation created successfully!");
 }
 
 main().catch(console.error);

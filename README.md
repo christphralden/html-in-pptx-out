@@ -30,13 +30,13 @@ const html = `
 `;
 
 const converter = new HtmlToPptx({
-  slideSelector: ".slide",
+  selector: ".slide",
 });
 
-await converter
-  .load(html)
-  .convert()
-  .export({ format: "pptx", filename: "presentation.pptx" });
+const buffer = await converter.load(html).convert().export({
+  format: "pptx",
+  filename: "presentation.pptx",
+});
 ```
 
 ## Usage
@@ -85,19 +85,17 @@ node dist/cli.js input.html output.pptx --selector .slide
 
 ### Processing Pipeline
 
-The library follows an immutable transformation pipeline with async plugin support:
-
 ```mermaid
 graph LR
-    A[HTML String] --> B[Parser]
-    B --> C[Intermediate DTO]
-    C --> D[Plugin Pipeline]
-    D --> E[PPTX Generator]
-    E --> F[Output]
+    A[HTML String] --> B[load]
+    B --> C[convert]
+    C --> D[export]
+    D --> E[ArrayBuffer]
 
-    D --> G[beforeParse]
-    D --> H[onSlide]
-    D --> I[afterGenerate]
+    C --> F[beforeParse hooks]
+    C --> G[parse - abstract]
+    C --> H[onSlide hooks]
+    D --> I[serialize - abstract]
 ```
 
 ### Data Flow
@@ -130,49 +128,138 @@ graph TD
 classDiagram
     class PresentationDTO {
         +slides: SlideDTO[]
-        +config: Config
-        +metadata: Metadata
+        +metadata: PresentationMetadata
+        +viewport: Dimensions
+        +fonts?: Record~string, Typography~
     }
 
     class SlideDTO {
         +id: string
         +order: number
         +elements: ElementDTO[]
-        +background?: Background
+        +background?: SlideBackground
     }
 
-    class ElementDTO {
-        <<interface>>
+    class Elements {
+        <<base>>
         +type: string
         +id: string
+        +position: Position
+        +dimensions: Dimensions
+        +zIndex?: number
+        +rotation?: number
+        +opacity?: number
     }
 
-    class TextElement {
+    class TextElementDTO {
         +type: "text"
         +content: string
-        +styles: TextStyles
-        +position: Position
+        +typography?: Typography
+        +textType?: string
+        +autoFit?: boolean
+        +padding?: Padding
     }
 
-    class ImageElement {
+    class ShapeElementDTO {
+        +type: "shape"
+        +shapeType: string
+        +fill?: Fill
+        +stroke?: Stroke
+        +path?: string
+    }
+
+    class ImageElementDTO {
         +type: "image"
         +src: string
-        +dimensions: Dimensions
-        +position: Position
+        +alt?: string
+        +fit?: string
     }
 
-    class ChartElement {
+    class ChartElementDTO {
         +type: "chart"
         +data: ChartData
-        +chartType: string
-        +position: Position
+        +sourceLibrary?: string
+        +previewImage?: string
+    }
+
+    class TableElementDTO {
+        +type: "table"
+        +rows: TableCellDTO[][]
+        +headerRow?: boolean
+        +headerColumn?: boolean
+    }
+
+    class LineElementDTO {
+        +type: "line"
+        +start: Position
+        +end: Position
+        +stroke: Stroke
     }
 
     PresentationDTO --> SlideDTO
-    SlideDTO --> ElementDTO
-    ElementDTO <|-- TextElement
-    ElementDTO <|-- ImageElement
-    ElementDTO <|-- ChartElement
+    SlideDTO --> Elements
+    Elements <|-- TextElementDTO
+    Elements <|-- ShapeElementDTO
+    Elements <|-- ImageElementDTO
+    Elements <|-- ChartElementDTO
+    Elements <|-- TableElementDTO
+    Elements <|-- LineElementDTO
+```
+
+### Type System Architecture
+
+The type system uses composable atomic types for maximum reusability:
+
+```mermaid
+graph TD
+    subgraph "Atomic Types (base.types.ts)"
+        Position
+        Dimensions
+        Typography
+        Fill
+        Stroke
+        Padding
+        Border
+    end
+
+    subgraph "Element DTOs (elements.types.ts)"
+        TextElementDTO
+        ShapeElementDTO
+        ImageElementDTO
+        ChartElementDTO
+        TableElementDTO
+        LineElementDTO
+    end
+
+    subgraph "Presentation DTOs (presentation.types.ts)"
+        SlideDTO
+        PresentationDTO
+    end
+
+    Position --> Elements
+    Dimensions --> Elements
+    Typography --> TextElementDTO
+    Typography --> TableCellDTO
+    Fill --> ShapeElementDTO
+    Fill --> SlideBackground
+    Stroke --> ShapeElementDTO
+    Stroke --> LineElementDTO
+
+    Elements --> TextElementDTO
+    Elements --> ShapeElementDTO
+    Elements --> ImageElementDTO
+    Elements --> ChartElementDTO
+    Elements --> TableElementDTO
+    Elements --> LineElementDTO
+
+    TextElementDTO --> SlideDTO
+    ShapeElementDTO --> SlideDTO
+    ImageElementDTO --> SlideDTO
+    ChartElementDTO --> SlideDTO
+    TableElementDTO --> SlideDTO
+    LineElementDTO --> SlideDTO
+
+    SlideDTO --> PresentationDTO
 ```
 
 ## Design Decisions
@@ -207,32 +294,68 @@ classDiagram
 
 ## Configuration
 
-### Basic Config
+### Parser Config
 
 ```typescript
-interface Config {
-  slideSelector: string; // CSS selector for slide elements
-  titleSelector?: string; // Optional title selector
-  contentSelector?: string; // Optional content selector
-  parser?: HTMLParser; // Custom HTML parser
-  renderer?: PptxRenderer; // Custom PPTX renderer
+interface ParserConfig {
+  selector: string;
+  dimensions: {
+    width: number;
+    height: number;
+  };
+}
+```
+
+### Export Config
+
+```typescript
+interface ExportConfig {
+  format: "pptx";
+  filename: string;
+  path?: string;
+  compression?: boolean;
+}
+
+interface ImageExportConfig {
+  format: "png" | "webp" | "jpg";
+  quality?: number;
+  output: {
+    directory: string;
+    naming?: (index: number, id: string) => string;
+  };
+  dimensions?: {
+    width: number;
+    height: number;
+  };
 }
 ```
 
 ### Plugin Contract
 
-html-in-pptx-out provides a set of default plugins out of the box that processes html based on my use-case and is pretty much general.
-
-by default theres no plugin loaded and its for developers to configure or override them.
-
-below are the explanations for the plugin contract used by html-in-pptx-out
-
 ```typescript
 interface Plugin {
   name: string;
-  beforeParse?: (html: string, config: Config) => Promise<string> | string;
-  onSlide?: (slide: SlideDTO, context: Context) => Promise<SlideDTO> | SlideDTO;
-  afterGenerate?: (pptx: PptxGenJS, slides: SlideDTO[]) => Promise<void> | void;
+  version?: string;
+  beforeParse?: (
+    html: string,
+    config: ParserConfig,
+    context: PluginContext,
+  ) => Promise<string> | string;
+  onSlide?: (
+    slide: SlideDTO,
+    context: PluginContext,
+  ) => Promise<SlideDTO> | SlideDTO;
+  afterGenerate?: (
+    pptx: PptxGenJS,
+    presentation: PresentationDTO,
+    context: PluginContext,
+  ) => Promise<void> | void;
+}
+
+interface PluginContext {
+  presentation?: PresentationDTO;
+  metadata: Record<string, unknown>;
+  state: Map<string, unknown>;
 }
 ```
 
@@ -246,11 +369,12 @@ const customFontPlugin: Plugin = {
       ...slide,
       elements: slide.elements.map((el) => {
         if (el.type === "text") {
+          const text = el as TextElementDTO;
           return {
-            ...el,
-            styles: {
-              ...el.styles,
-              fontFace: "Custom Font",
+            ...text,
+            typography: {
+              ...text.typography,
+              fontFamily: "Custom Font",
             },
           };
         }
@@ -265,46 +389,32 @@ const converter = new HtmlToPptx(config).use(customFontPlugin);
 
 ## API Reference
 
-### HtmlToPptx Class
+### AbstractConverter
 
 ```typescript
-class HtmlToPptx {
-  constructor(config: Config);
+abstract class AbstractConverter {
+  constructor(config?: Partial<ParserConfig>);
 
-  // Load HTML from string or file path
   load(input: string | HTMLSource): this;
-
-  // Apply plugin
   use(plugin: Plugin): this;
-
-  // Convert to intermediate DTO
   convert(): Promise<this>;
+  export(options: ExportConfig): Promise<ArrayBuffer>;
+  exportImages(options: ImageExportConfig): Promise<void>;
+  getPresentation(): PresentationDTO;
 
-  // Export as PPTX
-  export(options: ExportOptions): Promise<void>;
-
-  // Export slides as images
-  exportImages(options: ImageExportOptions): Promise<void>;
-
-  // Get intermediate DTO for inspection
-  getDTO(): PresentationDTO;
+  protected abstract parse(html: string): Promise<PresentationDTO>;
+  protected abstract serialize(
+    presentation: PresentationDTO,
+    options: ExportConfig,
+  ): Promise<ArrayBuffer>;
 }
 ```
 
-### Export Options
+### HtmlToPptx Class
 
 ```typescript
-interface ExportOptions {
-  format: "pptx";
-  filename: string;
-  path?: string; // Optional output directory
-}
-
-interface ImageExportOptions {
-  format: "png" | "webp";
-  quality?: number;
-  outputDir: string;
-  naming?: (slideIndex: number) => string;
+class HtmlToPptx extends AbstractConverter {
+  constructor(config?: Partial<ParserConfig>);
 }
 ```
 
@@ -313,45 +423,36 @@ interface ImageExportOptions {
 ```
 html-in-pptx-out/
 ├── src/
-│   ├── index.ts              # Main entry point
-│   ├── core/                 # Core conversion logic
-│   │   ├── parser.ts         # HTML parser
-│   │   ├── converter.ts      # Main converter class
-│   │   └── serializer.ts     # PPTX serializer
-│   ├── lib/                  # Shared utilities
-│   │   ├── dto.ts           # DTO definitions
+│   ├── index.ts
+│   ├── constants.ts
+│   ├── cli.ts
+│   ├── core/
+│   │   ├── abstract-converter.ts
+│   │   └── converter.ts
+│   ├── lib/
 │   │   └── plugin-manager.ts
-│   ├── plugins/              # Built-in plugins
+│   ├── plugins/
 │   │   └── index.ts
-│   ├── types/                # TypeScript types
-│   │   ├── config.ts
-│   │   ├── plugin.ts
-│   │   └── dto.ts
-│   └── utils/                # Helper functions
-├── tests/                    # Test files
-├── examples/                 # Usage examples
-└── dist/                     # Build output
+│   ├── types/
+│   │   ├── base.types.ts
+│   │   ├── elements.types.ts
+│   │   ├── presentation.types.ts
+│   │   ├── config.types.ts
+│   │   └── plugin.types.ts
+│   └── utils/
+│       └── assert.ts
+├── tests/
+├── examples/
+└── dist/
 ```
 
 ## Development
 
-The usual stuff
-
 ```bash
-# Install dependencies
 npm install
-
-# Run in development mode
-npm run dev
-
-# Build
 npm run build
-
-# Run tests
-npm test
-
-# Type checking
 npm run type-check
+npm test
 ```
 
 ## License

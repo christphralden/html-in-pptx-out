@@ -1,4 +1,5 @@
-import type { SlideDTO, PresentationDTO, Config } from './dto.types';
+import type { SlideDTO, PresentationDTO } from './presentation.types';
+import type { ParserConfig } from './config.types';
 import type PptxGenJS from 'pptxgenjs';
 
 export interface Plugin {
@@ -11,7 +12,7 @@ export interface Plugin {
 
 export type BeforeParseFn = (
   html: string,
-  config: Config,
+  config: ParserConfig,
   context: PluginContext
 ) => Promise<string> | string;
 
@@ -32,11 +33,19 @@ export interface PluginContext {
   state: Map<string, unknown>;
 }
 
-export interface PluginManager {
+export interface PluginManagerInterface {
   register(plugin: Plugin): void;
-  unregister(pluginName: string): void;
+  unregister(name: string): void;
   getPlugins(): Plugin[];
-  executeBeforeParse(html: string, config: Config, context: PluginContext): Promise<string>;
+  executeBeforeParse(
+    html: string,
+    config: ParserConfig,
+    context: PluginContext
+  ): Promise<string>;
   executeOnSlide(slide: SlideDTO, context: PluginContext): Promise<SlideDTO>;
-  executeAfterGenerate(pptx: PptxGenJS, presentation: PresentationDTO, context: PluginContext): Promise<void>;
+  executeAfterGenerate(
+    pptx: PptxGenJS,
+    presentation: PresentationDTO,
+    context: PluginContext
+  ): Promise<void>;
 }
