@@ -44,8 +44,7 @@ export const classifyElement = (
   if (tagName === "hr") return "line";
 
   if (TEXT_TAGS.has(tagName)) {
-    const hasText = element.textContent?.trim();
-    if (hasText) return "text";
+    if (hasDirectTextNode(element)) return "text";
   }
 
   const style = win.getComputedStyle(element);
@@ -67,4 +66,15 @@ export const classifyText = (
     return tag as "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
   if (tag === "p") return "p";
   return "body";
+};
+
+const hasDirectTextNode = (element: HTMLElement): boolean => {
+  for (const node of element.childNodes) {
+    if (node.nodeType === Node.TEXT_NODE) {
+      if (node.textContent && node.textContent.trim().length > 0) {
+        return true;
+      }
+    }
+  }
+  return false;
 };
