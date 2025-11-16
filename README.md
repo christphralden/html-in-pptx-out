@@ -225,23 +225,32 @@ classDiagram
 
 ### 1. Strategy Pattern with DI
 
+**Swap Parser or Serializer without changing orchestration logic**
+**Add or remove plugins without changing side-effects**
+
 - Parser and Serializer are injectable strategies
 - BaseConverter orchestrates lifecycle, delegates to strategies
+- Plugins are configurable
 - HtmlToPptx provides sensible defaults
-- Swap parser or serializer without changing orchestration logic
 
 ### 2. Single Responsibility Principle
 
-- Parser: Extract DOM elements and metadata (SRP)
-- Serializer: Convert DTO to output format (SRP)
-- BaseConverter: Orchestrate lifecycle and plugin execution (SRP)
-- Plugins: Transform data at specific lifecycle points (SRP)
+- Parser: Extract DOM elements and metadata
+- Serializer: Convert DTO to output format
+- BaseConverter: Orchestrate lifecycle and plugin execution
+- Plugins: Transform data at specific lifecycle points
 
 ### 3. Plugin Architecture
 
-- Four lifecycle hooks: `beforeParse`, `onParse`, `onSlide`, `afterGenerate`
-- `handles` array for O(1) element type filtering
-- Plugins work on clean DTOs, not raw DOM or PPTX API
+**Four lifecycle hooks: `beforeParse`, `onParse`, `onSlide`, `afterGenerate`**
+
+- `beforeParse`: executes after before processing DOM elements - modifies the DOM element
+- `onParse`: executes when parsing - dictates the outcome
+- `onSlide`: executes after parsing - modifies the slide DTO
+- `afterGenerate`: executes after serializing presentation - modifies how the binary looks
+
+- `handles` for targeted element processing
+- Plugins work on each data lifecycle
 - Immutable transforms ensure composability
 
 ### 4. Deferred Execution

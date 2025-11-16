@@ -3,15 +3,16 @@ import type {
   PluginManagerInterface,
   PluginContext,
   ParseContext,
-} from '@/types/plugin.types';
-import type { SlideDTO, PresentationDTO } from '@/types/presentation.types';
-import type { ParserConfig } from '@/types/config.types';
-import type { ElementDTO } from '@/types/elements.types';
-import type PptxGenJS from 'pptxgenjs';
+} from "@/types/plugin.types";
+import type { SlideDTO, PresentationDTO } from "@/types/presentation.types";
+import type { ParserConfig } from "@/types/config.types";
+import type { ElementDTO } from "@/types/elements.types";
+import type PptxGenJS from "pptxgenjs";
 
 export class PluginManager implements PluginManagerInterface {
   private plugins: Plugin[] = [];
   private context: PluginContext = {
+    presentation: undefined,
     metadata: {},
     state: new Map(),
   };
@@ -38,7 +39,10 @@ export class PluginManager implements PluginManagerInterface {
     this.context.presentation = presentation;
   }
 
-  async executeBeforeParse(html: string, config: ParserConfig): Promise<string> {
+  async executeBeforeParse(
+    html: string,
+    config: ParserConfig,
+  ): Promise<string> {
     let result = html;
 
     for (const plugin of this.plugins) {
