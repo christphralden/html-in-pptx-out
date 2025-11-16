@@ -36,6 +36,17 @@ export const serializeText = (
     y: pos.y,
     w: dims.w,
     h: dims.h,
+    /*
+     * I'm setting lineSpacingMultiple to one bcs its not vertically aligned well idk why
+     * Default line height to 1 for accurate vertical positioning.
+     * Without this, pptxgenjs uses its own default which is shit
+     */
+    lineSpacingMultiple: 1,
+    valign: "top",
+    align: "left",
+    isTextBox: true,
+    wrap: true,
+    shrinkText: false,
   };
 
   if (element.typography) {
@@ -87,24 +98,24 @@ export const serializeText = (
       textOptions.valign = typo.verticalAlign as "top" | "middle" | "bottom";
     }
 
-    if (typo.lineHeight && typo.fontSize) {
-      const lineSpacingMultiple = typo.lineHeight / typo.fontSize;
-      textOptions.lineSpacingMultiple = lineSpacingMultiple;
+    // if (typo.lineHeight && typo.fontSize) {
+    //   const lineSpacingMultiple = typo.lineHeight / typo.fontSize;
+    //   textOptions.lineSpacingMultiple = Math.round(lineSpacingMultiple * 2) / 2;
+    // }
+
+    if (element.padding) {
+      // left/right/top/bottom margin - or what pptxgenjs says
+      textOptions.margin = [
+        pxToPoints(element.padding.left),
+        pxToPoints(element.padding.right),
+        pxToPoints(element.padding.top),
+        pxToPoints(element.padding.bottom),
+      ];
     }
 
     if (typo.letterSpacing) {
       textOptions.charSpacing = typo.letterSpacing;
     }
-  }
-
-  if (element.padding) {
-    const avgMargin =
-      (element.padding.top +
-        element.padding.right +
-        element.padding.bottom +
-        element.padding.left) /
-      4;
-    textOptions.margin = pxToPoints(avgMargin);
   }
 
   if (element.rotation) {

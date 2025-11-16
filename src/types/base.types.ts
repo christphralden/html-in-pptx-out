@@ -69,6 +69,7 @@ export interface Stroke {
   color: string;
   width: number;
   style: "solid" | "dashed" | "dotted";
+  opacity?: number;
 }
 
 export interface Border {
@@ -76,6 +77,14 @@ export interface Border {
   right?: Stroke;
   bottom?: Stroke;
   left?: Stroke;
+}
+
+export interface Shadow {
+  type: "outer" | "inner";
+  color: string;
+  blur: number;
+  offset: { x: number; y: number };
+  opacity?: number;
 }
 
 export interface Elements {

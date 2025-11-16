@@ -226,7 +226,8 @@ classDiagram
 ### 1. Strategy Pattern with DI
 
 Swap Parser or Serializer without changing orchestration logic
-Add or remove plugins without changing side-effects
+<br/>
+Add or remove Plugins without changing side-effects
 
 - Parser and Serializer are injectable strategies
 - BaseConverter orchestrates lifecycle, delegates to strategies

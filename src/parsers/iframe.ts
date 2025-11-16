@@ -20,24 +20,32 @@ export class IframeParser implements ParserStrategy {
       const slideElement = slideElements[slideIndex];
       const children = slideElement.querySelectorAll<HTMLElement>("*");
 
-      for (const child of children) {
-        const elementType = classifyElement(child, iframe.contentWindow!);
-        if (!elementType) continue;
+      const allElements = [slideElement, ...Array.from(children)];
 
-        const parseContext: ParseContext = {
-          elementType: elementType,
-          tagName: child.tagName.toLowerCase(),
-          computedStyle: iframe.contentWindow!.getComputedStyle(child),
-          boundingRect: child.getBoundingClientRect(),
-          slideIndex: slideIndex,
-          slideElement: slideElement,
-        };
+      for (const child of allElements) {
+        const elementTypes = classifyElement(child, iframe.contentWindow!);
+        if (elementTypes.length === 0) continue;
 
-        elements.push({
-          slideIndex: slideIndex,
-          element: child,
-          parseContext: parseContext,
-        });
+        const computedStyle = iframe.contentWindow!.getComputedStyle(child);
+        const boundingRect = child.getBoundingClientRect();
+        const tagName = child.tagName.toLowerCase();
+
+        for (const elementType of elementTypes) {
+          const parseContext: ParseContext = {
+            elementType: elementType,
+            tagName: tagName,
+            computedStyle: computedStyle,
+            boundingRect: boundingRect,
+            slideIndex: slideIndex,
+            slideElement: slideElement,
+          };
+
+          elements.push({
+            slideIndex: slideIndex,
+            element: child,
+            parseContext: parseContext,
+          });
+        }
       }
     }
 

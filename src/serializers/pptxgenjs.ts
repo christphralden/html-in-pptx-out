@@ -4,6 +4,11 @@ import type { PluginManagerInterface } from "@/types/plugin.types";
 import PptxGenJS from "pptxgenjs";
 import { pxToInches } from "./utils/units";
 import { serializeText } from "./elements/text.serializer";
+import { serializeShape } from "./elements/shape.serializer";
+import { serializeLine } from "./elements/line.serializer";
+import { serializeImage } from "./elements/image.serializer";
+import { serializeTable } from "./elements/table.serializer";
+import { serializeChart } from "./elements/chart.serializer";
 
 export class PptxSerializer implements SerializerStrategy {
   private pluginManager: PluginManagerInterface | null = null;
@@ -22,11 +27,11 @@ export class PptxSerializer implements SerializerStrategy {
     const heightInches = pxToInches(presentation.viewport.height);
 
     pptx.defineLayout({
-      name: "CUSTOM",
+      name: "custom",
       width: widthInches,
       height: heightInches,
     });
-    pptx.layout = "CUSTOM";
+    pptx.layout = "custom";
 
     if (presentation.metadata.title) {
       pptx.title = presentation.metadata.title;
@@ -47,14 +52,19 @@ export class PptxSerializer implements SerializerStrategy {
             serializeText(slide, element, presentation.viewport);
             break;
           case "image":
+            // serializeImage(slide, element, presentation.viewport);
             break;
           case "shape":
+            serializeShape(slide, element, presentation.viewport);
             break;
           case "table":
+            // serializeTable(slide, element, presentation.viewport);
             break;
           case "chart":
+            // serializeChart(slide, element, presentation.viewport);
             break;
           case "line":
+            serializeLine(slide, element, presentation.viewport);
             break;
         }
       }

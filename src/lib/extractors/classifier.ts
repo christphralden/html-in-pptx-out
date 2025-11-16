@@ -29,33 +29,80 @@ const TABLE_TAGS = new Set(["table"]);
 export const classifyElement = (
   element: HTMLElement,
   win: Window = window,
-): ElementType | null => {
+): ElementType[] => {
+  const types: ElementType[] = [];
   const tagName = element.tagName.toLowerCase();
 
-  if (IMAGE_TAGS.has(tagName)) return "image";
-  if (TABLE_TAGS.has(tagName)) return "table";
+  if (IMAGE_TAGS.has(tagName)) {
+    types.push("image");
+    return types;
+  }
+
+  if (TABLE_TAGS.has(tagName)) {
+    types.push("table");
+    return types;
+  }
 
   if (tagName === "canvas") {
     const dataChart = element.getAttribute("data-chart");
-    if (dataChart) return "chart";
-    return "image";
+    if (dataChart) {
+      types.push("chart");
+    } else {
+      types.push("image");
+    }
+    return types;
   }
 
-  if (tagName === "hr") return "line";
-
-  if (TEXT_TAGS.has(tagName)) {
-    if (hasDirectTextNode(element)) return "text";
+  if (tagName === "hr") {
+    types.push("line");
+    return types;
   }
 
   const style = win.getComputedStyle(element);
-  const hasBackground =
+
+  const hasVisualStyling = checkVisualStyling(style);
+  if (hasVisualStyling) {
+    types.push("shape");
+  }
+
+  if (TEXT_TAGS.has(tagName) && hasDirectTextNode(element)) {
+    types.push("text");
+  }
+
+  return types;
+};
+
+const checkVisualStyling = (style: CSSStyleDeclaration): boolean => {
+  const hasBackgroundColor =
     style.backgroundColor !== "transparent" &&
     style.backgroundColor !== "rgba(0, 0, 0, 0)";
-  const hasBorder = style.borderWidth !== "0px";
 
-  if (hasBackground || hasBorder) return "shape";
+  const hasBackgroundImage =
+    style.backgroundImage !== "none" && style.backgroundImage !== "";
 
-  return null;
+  const hasBorder =
+    parseFloat(style.borderWidth) > 0 &&
+    style.borderColor !== "transparent" &&
+    style.borderColor !== "rgba(0, 0, 0, 0)";
+
+  const hasSingleSideBorder =
+    parseFloat(style.borderLeftWidth) > 0 ||
+    parseFloat(style.borderRightWidth) > 0 ||
+    parseFloat(style.borderTopWidth) > 0 ||
+    parseFloat(style.borderBottomWidth) > 0;
+
+  const hasShadow = style.boxShadow !== "none" && style.boxShadow !== "";
+
+  const hasBorderRadius = parseFloat(style.borderRadius) > 0;
+
+  return (
+    hasBackgroundColor ||
+    hasBackgroundImage ||
+    hasBorder ||
+    hasSingleSideBorder ||
+    hasShadow ||
+    hasBorderRadius
+  );
 };
 
 export const classifyText = (
@@ -66,6 +113,29 @@ export const classifyText = (
     return tag as "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
   if (tag === "p") return "p";
   return "body";
+};
+
+export const classifyShape = (
+  style: CSSStyleDeclaration,
+  boundingRect: DOMRect,
+): "rect" | "ellipse" | "roundRect" => {
+  const borderRadius = parseFloat(style.borderRadius) || 0;
+  const { width, height } = boundingRect;
+
+  const minDimension = Math.min(width, height);
+  const maxRadius = minDimension / 2;
+
+  if (borderRadius >= maxRadius * 0.9) {
+    if (Math.abs(width - height) < 2) {
+      return "ellipse";
+    }
+  }
+
+  if (borderRadius > 0) {
+    return "roundRect";
+  }
+
+  return "rect";
 };
 
 const hasDirectTextNode = (element: HTMLElement): boolean => {

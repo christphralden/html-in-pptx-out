@@ -1,5 +1,5 @@
-import type { Dimensions, Fill, Typography } from './base.types';
-import type { ElementDTO } from './elements.types';
+import type { Dimensions, Fill, Typography } from "./base.types";
+import type { ElementDTO } from "./elements.types";
 
 export interface SlideBackground {
   fill: Fill;
@@ -18,6 +18,7 @@ export interface PresentationMetadata {
   subject?: string;
   createdAt?: Date;
   modifiedAt?: Date;
+  plugins?: string[];
 }
 
 export interface PresentationDTO {

@@ -127,6 +127,7 @@ export class BaseConverter {
       slides: slides,
       metadata: {
         createdAt: new Date(),
+        plugins: this.pluginManager.getPlugins().map((plugin) => plugin.name),
       },
       viewport: this.config.dimensions,
     };

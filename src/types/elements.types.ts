@@ -8,6 +8,7 @@ import type {
   Border,
   Bounds,
   ElementType,
+  Shadow,
 } from "./base.types";
 
 export interface TextElementDTO extends Elements {
@@ -25,6 +26,8 @@ export interface ShapeElementDTO extends Elements {
   shapeType: "rect" | "ellipse" | "roundRect" | "triangle" | "custom";
   fill?: Fill;
   stroke?: Stroke;
+  borderRadius?: number;
+  shadow?: Shadow;
   path?: string;
   viewBox?: [number, number];
   fixedRatio?: boolean;

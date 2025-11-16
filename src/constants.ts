@@ -1,5 +1,6 @@
 import { Plugin } from "@/types/plugin.types";
 import { textPlugin } from "@/plugins/core/text";
+import { shapePlugin } from "@/plugins/core/shape";
 
 export const ANSI = {
   reset: "\x1b[0m",
@@ -50,4 +51,4 @@ export const NAMED_COLORS: Record<string, string> = {
   transparent: "FFFFFF",
 } as const;
 
-export const DEFAULT_CORE_PLUGINS: Plugin[] = [textPlugin];
+export const DEFAULT_CORE_PLUGINS: Plugin[] = [textPlugin, shapePlugin];
