@@ -8,6 +8,6 @@ export const ANSI = {
 
 export const DEFAULTS = {
   SLIDE_SELECTOR: ".slide",
-  SLIDE_WIDTH: 960,
-  SLIDE_HEIGHT: 540,
+  SLIDE_WIDTH: 992,
+  SLIDE_HEIGHT: 558,
 } as const;

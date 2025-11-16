@@ -7,21 +7,22 @@ import type {
   Stroke,
   Border,
   Bounds,
-} from './base.types';
+  ElementType,
+} from "./base.types";
 
 export interface TextElementDTO extends Elements {
-  type: 'text';
+  type: Extract<ElementType, "text">;
   content: string;
   typography?: Typography;
-  textType?: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'p' | 'body';
+  textType?: "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "p" | "body";
   autoFit?: boolean;
   vertical?: boolean;
   padding?: Padding;
 }
 
 export interface ShapeElementDTO extends Elements {
-  type: 'shape';
-  shapeType: 'rect' | 'ellipse' | 'roundRect' | 'triangle' | 'custom';
+  type: Extract<ElementType, "shape">;
+  shapeType: "rect" | "ellipse" | "roundRect" | "triangle" | "custom";
   fill?: Fill;
   stroke?: Stroke;
   path?: string;
@@ -30,16 +31,16 @@ export interface ShapeElementDTO extends Elements {
 }
 
 export interface ImageElementDTO extends Elements {
-  type: 'image';
+  type: Extract<ElementType, "image">;
   src: string;
   alt?: string;
   fixedRatio?: boolean;
-  fit?: 'cover' | 'contain' | 'stretch';
+  fit?: "cover" | "contain" | "stretch";
   clip?: Bounds;
 }
 
-export interface LineElementDTO extends Omit<Elements, 'dimensions'> {
-  type: 'line';
+export interface LineElementDTO extends Omit<Elements, "dimensions"> {
+  type: Extract<ElementType, "line">;
   start: Position;
   end: Position;
   stroke: Stroke;
@@ -56,7 +57,7 @@ export interface TableCellDTO {
 }
 
 export interface TableElementDTO extends Elements {
-  type: 'table';
+  type: Extract<ElementType, "table">;
   rows: TableCellDTO[][];
   cellMinHeight?: number;
   headerRow?: boolean;
@@ -68,7 +69,7 @@ export interface ChartSeries {
   values: number[];
   color?: string;
   colors?: string[];
-  axis?: 'primary' | 'secondary';
+  axis?: "primary" | "secondary";
 }
 
 export interface ChartOptions {
@@ -78,31 +79,31 @@ export interface ChartOptions {
   xAxisTitle?: string;
   yAxisTitle?: string;
   secondaryYAxisTitle?: string;
-  orientation?: 'vertical' | 'horizontal';
-  stacking?: 'none' | 'stacked' | 'percentStacked';
+  orientation?: "vertical" | "horizontal";
+  stacking?: "none" | "stacked" | "percentStacked";
   hole?: number;
   is3D?: boolean;
 }
 
 export interface ChartData {
   chartType:
-    | 'bar'
-    | 'line'
-    | 'pie'
-    | 'doughnut'
-    | 'area'
-    | 'scatter'
-    | 'radar'
-    | 'bubble';
+    | "bar"
+    | "line"
+    | "pie"
+    | "doughnut"
+    | "area"
+    | "scatter"
+    | "radar"
+    | "bubble";
   series: ChartSeries[];
   labels: string[];
   options?: ChartOptions;
 }
 
 export interface ChartElementDTO extends Elements {
-  type: 'chart';
+  type: Extract<ElementType, "chart">;
   data: ChartData;
-  sourceLibrary?: 'plotly' | 'echarts' | 'chartjs' | 'unknown';
+  sourceLibrary?: "plotly" | "echarts" | "chartjs" | "unknown";
   previewImage?: string;
 }
 

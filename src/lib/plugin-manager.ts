@@ -2,9 +2,11 @@ import type {
   Plugin,
   PluginManagerInterface,
   PluginContext,
+  ParseContext,
 } from '@/types/plugin.types';
 import type { SlideDTO, PresentationDTO } from '@/types/presentation.types';
 import type { ParserConfig } from '@/types/config.types';
+import type { ElementDTO } from '@/types/elements.types';
 import type PptxGenJS from 'pptxgenjs';
 
 export class PluginManager implements PluginManagerInterface {
@@ -42,6 +44,24 @@ export class PluginManager implements PluginManagerInterface {
     }
 
     return result;
+  }
+
+  async executeOnParse(
+    element: HTMLElement,
+    parseContext: ParseContext,
+    pluginContext: PluginContext
+  ): Promise<ElementDTO | null> {
+    for (const plugin of this.plugins) {
+      if (!plugin.handles || !plugin.onParse) continue;
+
+      const handlers = new Set(plugin.handles);
+      if (!handlers.has(parseContext.elementType)) continue;
+
+      const result = await plugin.onParse(element, parseContext, pluginContext);
+      if (result) return result;
+    }
+
+    return null;
   }
 
   async executeOnSlide(

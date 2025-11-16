@@ -97,6 +97,10 @@ sequenceDiagram
     HtmlToPptx->>PluginManager: executeBeforeParse(html)
     PluginManager-->>HtmlToPptx: html
     HtmlToPptx->>HtmlToPptx: parse(html)
+    loop Each Element
+        HtmlToPptx->>PluginManager: executeOnParse(element, parseContext)
+        PluginManager-->>HtmlToPptx: ElementDTO
+    end
     Note over HtmlToPptx: PresentationDTO created
     loop Each Slide
         HtmlToPptx->>PluginManager: executeOnSlide(slide)
@@ -279,14 +283,31 @@ interface ImageExportConfig {
 ### Plugin Contract
 
 ```typescript
+type ElementType = 'text' | 'image' | 'shape' | 'chart' | 'table' | 'line';
+
+interface ParseContext {
+  elementType: ElementType;
+  tagName: string;
+  computedStyle: CSSStyleDeclaration;
+  boundingRect: DOMRect;
+  slideIndex: number;
+  slideElement: HTMLElement;
+}
+
 interface Plugin {
   name: string;
   version?: string;
+  handles?: ElementType[];
   beforeParse?: (
     html: string,
     config: ParserConfig,
     context: PluginContext,
   ) => Promise<string> | string;
+  onParse?: (
+    element: HTMLElement,
+    parseContext: ParseContext,
+    pluginContext: PluginContext,
+  ) => Promise<ElementDTO | null> | ElementDTO | null;
   onSlide?: (
     slide: SlideDTO,
     context: PluginContext,
@@ -308,6 +329,33 @@ interface PluginContext {
 ### Example Plugin
 
 ```typescript
+const textParserPlugin: Plugin = {
+  name: "text-parser",
+  handles: ["text"],
+  onParse: (element, parseContext, pluginContext) => {
+    const { computedStyle, boundingRect } = parseContext;
+
+    return {
+      type: "text",
+      id: crypto.randomUUID(),
+      content: element.textContent || "",
+      position: {
+        left: boundingRect.left,
+        top: boundingRect.top,
+      },
+      dimensions: {
+        width: boundingRect.width,
+        height: boundingRect.height,
+      },
+      typography: {
+        fontFamily: computedStyle.fontFamily,
+        fontSize: parseFloat(computedStyle.fontSize),
+        color: computedStyle.color,
+      },
+    };
+  },
+};
+
 const customFontPlugin: Plugin = {
   name: "custom-fonts",
   onSlide: async (slide, context) => {
@@ -315,11 +363,10 @@ const customFontPlugin: Plugin = {
       ...slide,
       elements: slide.elements.map((el) => {
         if (el.type === "text") {
-          const text = el as TextElementDTO;
           return {
-            ...text,
+            ...el,
             typography: {
-              ...text.typography,
+              ...el.typography,
               fontFamily: "Custom Font",
             },
           };
@@ -330,7 +377,9 @@ const customFontPlugin: Plugin = {
   },
 };
 
-const converter = new HtmlToPptx(config).use(customFontPlugin);
+const converter = new HtmlToPptx(config)
+  .use(textParserPlugin)
+  .use(customFontPlugin);
 ```
 
 ## API Reference
