@@ -9,7 +9,7 @@ import type { Plugin, PluginContext } from "@/types/plugin.types";
 import { PluginManager } from "@/lib/plugin-manager";
 import { assertNonNull } from "@/utils/assert";
 
-export abstract class AbstractConverter {
+export abstract class BaseConverter {
   protected config: ParserConfig;
   protected pluginManager: PluginManager;
   protected presentation: PresentationDTO | null = null;

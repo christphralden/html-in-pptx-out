@@ -88,22 +88,33 @@ node dist/cli.js input.html output.pptx --selector .slide
 ```mermaid
 sequenceDiagram
     participant User
-    participant Converter
-    participant Plugins
+    participant HtmlToPptx
+    participant BaseConverter
+    participant PluginManager
 
-    User->>Converter: load(html)
-    User->>Converter: convert()
-    Converter->>Plugins: beforeParse(html)
-    Plugins-->>Converter: html
-    Converter->>Converter: parse(html)
-    Note over Converter: PresentationDTO created
+    User->>HtmlToPptx: new HtmlToPptx(config)
+    HtmlToPptx->>BaseConverter: super(config)
+
+    User->>HtmlToPptx: load(html)
+    Note over HtmlToPptx,BaseConverter: inherited from BaseConverter
+
+    User->>HtmlToPptx: convert()
+    HtmlToPptx->>BaseConverter: convert()
+    BaseConverter->>PluginManager: executeBeforeParse(html)
+    PluginManager-->>BaseConverter: html
+    BaseConverter->>HtmlToPptx: parse(html)
+    HtmlToPptx-->>BaseConverter: PresentationDTO
     loop Each Slide
-        Converter->>Plugins: onSlide(slide)
-        Plugins-->>Converter: slide
+        BaseConverter->>PluginManager: executeOnSlide(slide)
+        PluginManager-->>BaseConverter: slide
     end
-    User->>Converter: export(options)
-    Converter->>Converter: serialize(presentation)
-    Converter-->>User: ArrayBuffer
+
+    User->>HtmlToPptx: export(options)
+    HtmlToPptx->>BaseConverter: export(options)
+    BaseConverter->>HtmlToPptx: serialize(presentation)
+    HtmlToPptx->>PluginManager: executeAfterGenerate(pptx)
+    HtmlToPptx-->>BaseConverter: ArrayBuffer
+    BaseConverter-->>User: ArrayBuffer
 ```
 
 ### Data Flow
@@ -333,10 +344,10 @@ const converter = new HtmlToPptx(config).use(customFontPlugin);
 
 ## API Reference
 
-### AbstractConverter
+### BaseConverter
 
 ```typescript
-abstract class AbstractConverter {
+abstract class BaseConverter {
   constructor(config?: Partial<ParserConfig>);
 
   load(input: string | HTMLSource): this;
@@ -357,7 +368,7 @@ abstract class AbstractConverter {
 ### HtmlToPptx Class
 
 ```typescript
-class HtmlToPptx extends AbstractConverter {
+class HtmlToPptx extends BaseConverter {
   constructor(config?: Partial<ParserConfig>);
 }
 ```
@@ -371,7 +382,7 @@ html-in-pptx-out/
 │   ├── constants.ts
 │   ├── cli.ts
 │   ├── core/
-│   │   ├── abstract-converter.ts
+│   │   ├── base-converter.ts
 │   │   └── converter.ts
 │   ├── lib/
 │   │   └── plugin-manager.ts

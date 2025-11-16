@@ -1,9 +1,9 @@
 import type { ExportConfig, ParserConfig } from "@/types/config.types";
 import type { PresentationDTO, SlideDTO } from "@/types/presentation.types";
-import { AbstractConverter } from "./abstract-converter";
+import { BaseConverter } from "./base-converter";
 import { DEFAULTS } from "@/constants";
 
-export class HtmlToPptx extends AbstractConverter {
+export class HtmlToPptx extends BaseConverter {
   constructor(config: Partial<ParserConfig> = {}) {
     super({
       selector: config.selector || DEFAULTS.SLIDE_SELECTOR,
