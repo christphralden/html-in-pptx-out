@@ -86,114 +86,114 @@ node dist/cli.js input.html output.pptx --selector .slide
 ### Processing Pipeline
 
 ```mermaid
-graph LR
-    A[HTML String] --> B[load]
-    B --> C[convert]
-    C --> D[export]
-    D --> E[ArrayBuffer]
+sequenceDiagram
+    participant User
+    participant Converter
+    participant Plugins
 
-    C --> F[beforeParse hooks]
-    C --> G[parse - abstract]
-    C --> H[onSlide hooks]
-    D --> I[serialize - abstract]
+    User->>Converter: load(html)
+    User->>Converter: convert()
+    Converter->>Plugins: beforeParse(html)
+    Plugins-->>Converter: html
+    Converter->>Converter: parse(html)
+    Note over Converter: PresentationDTO created
+    loop Each Slide
+        Converter->>Plugins: onSlide(slide)
+        Plugins-->>Converter: slide
+    end
+    User->>Converter: export(options)
+    Converter->>Converter: serialize(presentation)
+    Converter-->>User: ArrayBuffer
 ```
 
 ### Data Flow
 
 ```mermaid
-graph TD
-    A[HTML Input] --> B{Parser}
-    B --> C[Intermediate DTO]
-
-    C --> D[Slide Objects]
-    D --> E[Element: Text]
-    D --> F[Element: Image]
-    D --> G[Element: Chart]
-
-    E --> H{Plugin Transform}
-    F --> H
-    G --> H
-
-    H --> I[Modified DTO]
-    I --> J[PptxGenJS Serializer]
-    J --> K[PPTX Output]
-
-    I --> L[Image Renderer]
-    L --> M[PNG/WebP Output]
+graph LR
+    A[HTML] --> B[PresentationDTO]
+    B --> C[SlideDTO]
+    C --> D[Elements]
+    B --> E[ArrayBuffer]
 ```
 
-### Intermediate DTO Structure
+### DTO Structure
 
 ```mermaid
 classDiagram
     class PresentationDTO {
-        +slides: SlideDTO[]
-        +metadata: PresentationMetadata
-        +viewport: Dimensions
-        +fonts?: Record~string, Typography~
+        slides: SlideDTO[]
+        metadata: PresentationMetadata
+        viewport: Dimensions
+        fonts?: Record~string, Typography~
     }
 
     class SlideDTO {
-        +id: string
-        +order: number
-        +elements: ElementDTO[]
-        +background?: SlideBackground
+        id: string
+        order: number
+        elements: ElementDTO[]
+        background?: SlideBackground
     }
 
     class Elements {
-        <<base>>
-        +type: string
-        +id: string
-        +position: Position
-        +dimensions: Dimensions
-        +zIndex?: number
-        +rotation?: number
-        +opacity?: number
+        <<interface>>
+        type: string
+        id: string
+        position: Position
+        dimensions: Dimensions
+        zIndex?: number
+        rotation?: number
+        opacity?: number
     }
 
     class TextElementDTO {
-        +type: "text"
-        +content: string
-        +typography?: Typography
-        +textType?: string
-        +autoFit?: boolean
-        +padding?: Padding
+        type: "text"
+        content: string
+        typography?: Typography
+        textType?: string
+        autoFit?: boolean
+        vertical?: boolean
+        padding?: Padding
     }
 
     class ShapeElementDTO {
-        +type: "shape"
-        +shapeType: string
-        +fill?: Fill
-        +stroke?: Stroke
-        +path?: string
+        type: "shape"
+        shapeType: string
+        fill?: Fill
+        stroke?: Stroke
+        path?: string
+        viewBox?: number[]
+        fixedRatio?: boolean
     }
 
     class ImageElementDTO {
-        +type: "image"
-        +src: string
-        +alt?: string
-        +fit?: string
+        type: "image"
+        src: string
+        alt?: string
+        fixedRatio?: boolean
+        fit?: string
+        clip?: Bounds
     }
 
     class ChartElementDTO {
-        +type: "chart"
-        +data: ChartData
-        +sourceLibrary?: string
-        +previewImage?: string
+        type: "chart"
+        data: ChartData
+        sourceLibrary?: string
+        previewImage?: string
     }
 
     class TableElementDTO {
-        +type: "table"
-        +rows: TableCellDTO[][]
-        +headerRow?: boolean
-        +headerColumn?: boolean
+        type: "table"
+        rows: TableCellDTO[][]
+        cellMinHeight?: number
+        headerRow?: boolean
+        headerColumn?: boolean
     }
 
     class LineElementDTO {
-        +type: "line"
-        +start: Position
-        +end: Position
-        +stroke: Stroke
+        type: "line"
+        start: Position
+        end: Position
+        stroke: Stroke
     }
 
     PresentationDTO --> SlideDTO
@@ -204,62 +204,6 @@ classDiagram
     Elements <|-- ChartElementDTO
     Elements <|-- TableElementDTO
     Elements <|-- LineElementDTO
-```
-
-### Type System Architecture
-
-The type system uses composable atomic types for maximum reusability:
-
-```mermaid
-graph TD
-    subgraph "Atomic Types (base.types.ts)"
-        Position
-        Dimensions
-        Typography
-        Fill
-        Stroke
-        Padding
-        Border
-    end
-
-    subgraph "Element DTOs (elements.types.ts)"
-        TextElementDTO
-        ShapeElementDTO
-        ImageElementDTO
-        ChartElementDTO
-        TableElementDTO
-        LineElementDTO
-    end
-
-    subgraph "Presentation DTOs (presentation.types.ts)"
-        SlideDTO
-        PresentationDTO
-    end
-
-    Position --> Elements
-    Dimensions --> Elements
-    Typography --> TextElementDTO
-    Typography --> TableCellDTO
-    Fill --> ShapeElementDTO
-    Fill --> SlideBackground
-    Stroke --> ShapeElementDTO
-    Stroke --> LineElementDTO
-
-    Elements --> TextElementDTO
-    Elements --> ShapeElementDTO
-    Elements --> ImageElementDTO
-    Elements --> ChartElementDTO
-    Elements --> TableElementDTO
-    Elements --> LineElementDTO
-
-    TextElementDTO --> SlideDTO
-    ShapeElementDTO --> SlideDTO
-    ImageElementDTO --> SlideDTO
-    ChartElementDTO --> SlideDTO
-    TableElementDTO --> SlideDTO
-    LineElementDTO --> SlideDTO
-
-    SlideDTO --> PresentationDTO
 ```
 
 ## Design Decisions
