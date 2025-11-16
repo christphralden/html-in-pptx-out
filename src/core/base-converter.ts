@@ -78,7 +78,7 @@ export class BaseConverter {
     const { elements, cleanup } = await this.parser.parse(html, parserConfig);
 
     if (this.config.debug) {
-      console.log("beforeOnParse", {
+      console.log("before: executeOnParse", {
         elements,
       });
     }
@@ -100,7 +100,7 @@ export class BaseConverter {
     }
 
     if (this.config.debug) {
-      console.log("afterOnParse", {
+      console.log("after: executeOnParse", {
         slides: slidesMap,
       });
     }
@@ -136,7 +136,7 @@ export class BaseConverter {
     this.pluginManager.setPresentation(this.presentation);
 
     if (this.config.debug) {
-      console.log("post-mortem", {
+      console.log("after: executeOnSlide", {
         presentation: this.presentation,
       });
       console.groupEnd();
