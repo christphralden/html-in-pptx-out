@@ -225,8 +225,8 @@ classDiagram
 
 ### 1. Strategy Pattern with DI
 
-**Swap Parser or Serializer without changing orchestration logic**
-**Add or remove plugins without changing side-effects**
+Swap Parser or Serializer without changing orchestration logic
+Add or remove plugins without changing side-effects
 
 - Parser and Serializer are injectable strategies
 - BaseConverter orchestrates lifecycle, delegates to strategies
@@ -242,12 +242,12 @@ classDiagram
 
 ### 3. Plugin Architecture
 
-**Four lifecycle hooks: `beforeParse`, `onParse`, `onSlide`, `afterGenerate`**
+Four lifecycle hooks: `beforeParse`, `onParse`, `onSlide`, `afterGenerate`
 
-- `beforeParse`: executes after before processing DOM elements - modifies the DOM element
-- `onParse`: executes when parsing - dictates the outcome
-- `onSlide`: executes after parsing - modifies the slide DTO
-- `afterGenerate`: executes after serializing presentation - modifies how the binary looks
+`beforeParse`: executes after before processing DOM elements - modifies the DOM element
+`onParse`: executes when parsing - dictates the outcome
+`onSlide`: executes after parsing - modifies the slide DTO
+`afterGenerate`: executes after serializing presentation - modifies how the binary looks
 
 - `handles` for targeted element processing
 - Plugins work on each data lifecycle
