@@ -245,9 +245,13 @@ Add or remove plugins without changing side-effects
 Four lifecycle hooks: `beforeParse`, `onParse`, `onSlide`, `afterGenerate`
 
 `beforeParse`: executes after before processing DOM elements - modifies the DOM element
+<br/>
 `onParse`: executes when parsing - dictates the outcome
+<br/>
 `onSlide`: executes after parsing - modifies the slide DTO
+<br/>
 `afterGenerate`: executes after serializing presentation - modifies how the binary looks
+<br/>
 
 - `handles` for targeted element processing
 - Plugins work on each data lifecycle
