@@ -39,6 +39,48 @@ await converter
   .export({ format: "pptx", filename: "presentation.pptx" });
 ```
 
+## Usage
+
+**Test Page**
+
+```bash
+npm run build
+npx serve .
+```
+
+or
+
+```bash
+npm run demo
+```
+
+Then open `http://localhost:3000/demo` in your browser.
+
+## CLI
+
+```bash
+npx html-in-pptx-out <input.html> <output.pptx> [--selector <selector>]
+```
+
+**Options**
+
+- `--selector <selector>` - CSS selector for slides (default: `.slide`)
+
+**Examples**
+
+```bash
+npx html-in-pptx-out input.html output.pptx
+npx html-in-pptx-out input.html output.pptx --selector .page
+npx html-in-pptx-out slides.html presentation.pptx --selector "[data-slide]"
+```
+
+**Development**
+
+```bash
+npm run build
+node dist/cli.js input.html output.pptx --selector .slide
+```
+
 ## Architecture
 
 ### Processing Pipeline
@@ -142,26 +184,26 @@ classDiagram
 - Easier debugging and state inspection
 - Supports async operations throughout
 
-### 2. Dependency Injection via Config
+### 2. Plugin Contract
+
+- Async-first design
+- Three lifecycle hooks: `beforeParse`, `onSlide`, `afterGenerate`
+- Plugins work on clean DTO (not raw HTML or PPTX API)
+- Immutable transforms ensure plugin composability
+
+### 3. Dependency Injection via Config
 
 - Simple config object pattern (not full DI container)
 - Type-safe and explicit
 - Easy to test and mock
 - KISS
 
-### 3. ESM-First with CJS Fallback
+### 4. ESM-First with CJS Fallback
 
 - Modern ESM as primary format
 - CJS for backward compatibility
 - Dual package exports for maximum compatibility
 - Works in Node.js, browsers, and bundlers
-
-### 5. Plugin Contract
-
-- Async-first design
-- Three lifecycle hooks: `beforeParse`, `onSlide`, `afterGenerate`
-- Plugins work on clean DTO (not raw HTML or PPTX API)
-- Immutable transforms ensure plugin composability
 
 ## Configuration
 
@@ -177,7 +219,13 @@ interface Config {
 }
 ```
 
-### Plugin System
+### Plugin Contract
+
+html-in-pptx-out provides a set of default plugins out of the box that processes html based on my use-case and is pretty much general.
+
+by default theres no plugin loaded and its for developers to configure or override them.
+
+below are the explanations for the plugin contract used by html-in-pptx-out
 
 ```typescript
 interface Plugin {
@@ -287,6 +335,8 @@ html-in-pptx-out/
 
 ## Development
 
+The usual stuff
+
 ```bash
 # Install dependencies
 npm install
@@ -306,7 +356,7 @@ npm run type-check
 
 ## License
 
-MIT © Alden
+MIT © christphralden
 
 ## Acknowledgments
 
