@@ -88,38 +88,47 @@ node dist/cli.js input.html output.pptx --selector .slide
 ```mermaid
 sequenceDiagram
     participant User
-    participant HtmlToPptx
+    participant BaseConverter
+    participant Parser
     participant PluginManager
+    participant Serializer
 
-    User->>HtmlToPptx: new HtmlToPptx(config)
-    User->>HtmlToPptx: load(html)
-    User->>HtmlToPptx: convert()
-    HtmlToPptx->>PluginManager: executeBeforeParse(html)
-    PluginManager-->>HtmlToPptx: html
-    HtmlToPptx->>HtmlToPptx: parse(html)
+    User->>BaseConverter: new HtmlToPptx(config)
+    User->>BaseConverter: load(html)
+    User->>BaseConverter: convert()
+    BaseConverter->>PluginManager: executeBeforeParse(html, config)
+    PluginManager-->>BaseConverter: html
+    BaseConverter->>Parser: parse(html, config)
+    Parser-->>BaseConverter: ParserResult {elements, cleanup}
     loop Each Element
-        HtmlToPptx->>PluginManager: executeOnParse(element, parseContext)
-        PluginManager-->>HtmlToPptx: ElementDTO
+        BaseConverter->>PluginManager: executeOnParse(element, parseContext)
+        PluginManager-->>BaseConverter: ElementDTO
     end
-    Note over HtmlToPptx: PresentationDTO created
+    BaseConverter->>Parser: cleanup()
+    Note over BaseConverter: PresentationDTO created
+    BaseConverter->>PluginManager: setPresentation(presentation)
     loop Each Slide
-        HtmlToPptx->>PluginManager: executeOnSlide(slide)
-        PluginManager-->>HtmlToPptx: slide
+        BaseConverter->>PluginManager: executeOnSlide(slide)
+        PluginManager-->>BaseConverter: slide
     end
-    User->>HtmlToPptx: export(options)
-    HtmlToPptx->>HtmlToPptx: serialize(presentation)
-    HtmlToPptx->>PluginManager: executeAfterGenerate(pptx)
-    HtmlToPptx-->>User: ArrayBuffer
+    User->>BaseConverter: export(options)
+    BaseConverter->>Serializer: serialize(presentation, options)
+    Serializer-->>BaseConverter: ArrayBuffer
+    BaseConverter-->>User: ArrayBuffer
 ```
 
 ### Data Flow
 
 ```mermaid
 graph LR
-    A[HTML] --> B[PresentationDTO]
-    B --> C[SlideDTO]
-    C --> D[Elements]
-    B --> E[ArrayBuffer]
+    A[HTML String] --> B[Parser]
+    B --> C[ParserElement[]]
+    C --> D[Plugins onParse]
+    D --> E[ElementDTO[]]
+    E --> F[PresentationDTO]
+    F --> G[Plugins onSlide]
+    G --> H[Serializer]
+    H --> I[ArrayBuffer]
 ```
 
 ### DTO Structure
@@ -214,45 +223,81 @@ classDiagram
 
 ## Design Decisions
 
-### 1. Immutable Pipeline
+### 1. Strategy Pattern with DI
 
-- Each transformation step returns new data structures
-- Prevents plugin interference and side effects
-- Easier debugging and state inspection
-- Supports async operations throughout
+- Parser and Serializer are injectable strategies
+- BaseConverter orchestrates lifecycle, delegates to strategies
+- HtmlToPptx provides sensible defaults
+- Swap parser or serializer without changing orchestration logic
 
-### 2. Plugin Contract
+### 2. Single Responsibility Principle
 
-- Async-first design
-- Three lifecycle hooks: `beforeParse`, `onSlide`, `afterGenerate`
-- Plugins work on clean DTO (not raw HTML or PPTX API)
-- Immutable transforms ensure plugin composability
+- Parser: Extract DOM elements and metadata (SRP)
+- Serializer: Convert DTO to output format (SRP)
+- BaseConverter: Orchestrate lifecycle and plugin execution (SRP)
+- Plugins: Transform data at specific lifecycle points (SRP)
 
-### 3. Dependency Injection via Config
+### 3. Plugin Architecture
 
-- Simple config object pattern (not full DI container)
-- Type-safe and explicit
-- Easy to test and mock
-- KISS
+- Four lifecycle hooks: `beforeParse`, `onParse`, `onSlide`, `afterGenerate`
+- `handles` array for O(1) element type filtering
+- Plugins work on clean DTOs, not raw DOM or PPTX API
+- Immutable transforms ensure composability
 
-### 4. ESM-First with CJS Fallback
+### 4. Deferred Execution
 
-- Modern ESM as primary format
-- CJS for backward compatibility
-- Dual package exports for maximum compatibility
+- Parser returns raw elements, not processed DTOs
+- BaseConverter decides when to call plugins
+- Clean separation between extraction and transformation
+- Full control over execution flow
+
+### 5. CLI compatible
+
+- Use this as a standalone library through cli - useful for agentic tool-calls
 - Works in Node.js, browsers, and bundlers
 
 ## Configuration
 
-### Parser Config
+### Converter Config
 
 ```typescript
-interface ParserConfig {
-  selector: string;
-  dimensions: {
-    width: number;
-    height: number;
-  };
+interface ConverterConfig {
+  selector?: string;
+  dimensions?: Dimensions;
+  plugins?: PluginsConfig;
+  parser?: ParserStrategy;
+  serializer?: SerializerStrategy;
+}
+
+interface PluginsConfig {
+  core?: Plugin[];
+  extensions?: Plugin[];
+}
+```
+
+### Strategy Interfaces
+
+```typescript
+interface ParserElement {
+  slideIndex: number;
+  element: HTMLElement;
+  parseContext: ParseContext;
+}
+
+interface ParserResult {
+  elements: ParserElement[];
+  cleanup: () => void;
+}
+
+interface ParserStrategy {
+  parse(html: string, config: ParserConfig): Promise<ParserResult>;
+}
+
+interface SerializerStrategy {
+  serialize(
+    presentation: PresentationDTO,
+    options: ExportConfig,
+  ): Promise<ArrayBuffer>;
 }
 ```
 
@@ -283,7 +328,7 @@ interface ImageExportConfig {
 ### Plugin Contract
 
 ```typescript
-type ElementType = 'text' | 'image' | 'shape' | 'chart' | 'table' | 'line';
+type ElementType = "text" | "image" | "shape" | "chart" | "table" | "line";
 
 interface ParseContext {
   elementType: ElementType;
@@ -387,8 +432,8 @@ const converter = new HtmlToPptx(config)
 ### BaseConverter
 
 ```typescript
-abstract class BaseConverter {
-  constructor(config?: Partial<ParserConfig>);
+class BaseConverter {
+  constructor(config: ConverterConfig);
 
   load(input: string | HTMLSource): this;
   use(plugin: Plugin): this;
@@ -396,12 +441,6 @@ abstract class BaseConverter {
   export(options: ExportConfig): Promise<ArrayBuffer>;
   exportImages(options: ImageExportConfig): Promise<void>;
   getPresentation(): PresentationDTO;
-
-  protected abstract parse(html: string): Promise<PresentationDTO>;
-  protected abstract serialize(
-    presentation: PresentationDTO,
-    options: ExportConfig,
-  ): Promise<ArrayBuffer>;
 }
 ```
 
@@ -409,9 +448,41 @@ abstract class BaseConverter {
 
 ```typescript
 class HtmlToPptx extends BaseConverter {
-  constructor(config?: Partial<ParserConfig>);
+  constructor(config?: Partial<ConverterConfig>);
 }
 ```
+
+### Built-in Strategies
+
+```typescript
+class IframeParser implements ParserStrategy {
+  parse(html: string, config: ParserConfig): Promise<ParserResult>;
+}
+
+class PptxSerializer implements SerializerStrategy {
+  serialize(
+    presentation: PresentationDTO,
+    options: ExportConfig,
+  ): Promise<ArrayBuffer>;
+}
+```
+
+### PluginManager
+
+```typescript
+class PluginManager {
+  register(plugin: Plugin): void;
+  unregister(name: string): void;
+  getPlugins(): Plugin[];
+  setPresentation(presentation: PresentationDTO): void;
+  executeBeforeParse(html: string, config: ParserConfig): Promise<string>;
+  executeOnParse(element: HTMLElement, parseContext: ParseContext): Promise<ElementDTO | null>;
+  executeOnSlide(slide: SlideDTO): Promise<SlideDTO>;
+  executeAfterGenerate(pptx: PptxGenJS, presentation: PresentationDTO): Promise<void>;
+}
+```
+
+PluginManager owns and manages `PluginContext` internally. Plugins receive context from the manager, not from callers.
 
 ## Project Structure
 
@@ -424,10 +495,21 @@ html-in-pptx-out/
 │   ├── core/
 │   │   ├── base-converter.ts
 │   │   └── converter.ts
+│   ├── parsers/
+│   │   └── iframe.ts
+│   ├── serializers/
+│   │   └── pptx.ts
 │   ├── lib/
-│   │   └── plugin-manager.ts
+│   │   ├── plugin-manager.ts
+│   │   ├── iframe-renderer.ts
+│   │   └── extractors/
+│   │       ├── classifier.ts
+│   │       ├── typography.ts
+│   │       └── position.ts
 │   ├── plugins/
-│   │   └── index.ts
+│   │   └── core/
+│   │       ├── index.ts
+│   │       └── text.ts
 │   ├── types/
 │   │   ├── base.types.ts
 │   │   ├── elements.types.ts
@@ -435,7 +517,8 @@ html-in-pptx-out/
 │   │   ├── config.types.ts
 │   │   └── plugin.types.ts
 │   └── utils/
-│       └── assert.ts
+│       ├── assert.ts
+│       └── sanitize.ts
 ├── tests/
 ├── examples/
 └── dist/

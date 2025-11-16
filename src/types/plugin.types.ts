@@ -56,20 +56,15 @@ export interface PluginManagerInterface {
   register(plugin: Plugin): void;
   unregister(name: string): void;
   getPlugins(): Plugin[];
-  executeBeforeParse(
-    html: string,
-    config: ParserConfig,
-    context: PluginContext,
-  ): Promise<string>;
+  setPresentation(presentation: PresentationDTO): void;
+  executeBeforeParse(html: string, config: ParserConfig): Promise<string>;
   executeOnParse(
     element: HTMLElement,
     parseContext: ParseContext,
-    pluginContext: PluginContext,
   ): Promise<ElementDTO | null>;
-  executeOnSlide(slide: SlideDTO, context: PluginContext): Promise<SlideDTO>;
+  executeOnSlide(slide: SlideDTO): Promise<SlideDTO>;
   executeAfterGenerate(
     pptx: PptxGenJS,
     presentation: PresentationDTO,
-    context: PluginContext,
   ): Promise<void>;
 }

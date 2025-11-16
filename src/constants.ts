@@ -1,3 +1,6 @@
+import { Plugin } from "@/types/plugin.types";
+import { textPlugin } from "@/plugins/core/text";
+
 export const ANSI = {
   reset: "\x1b[0m",
   red: "\x1b[31m",
@@ -10,4 +13,7 @@ export const DEFAULTS = {
   SLIDE_SELECTOR: ".slide",
   SLIDE_WIDTH: 992,
   SLIDE_HEIGHT: 558,
+  FONT_FAMILY: "",
 } as const;
+
+export const DEFAULT_CORE_PLUGINS: Plugin[] = [textPlugin];

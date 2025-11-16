@@ -1,31 +1,48 @@
 import type {
-  ParserConfig,
   ExportConfig,
   ImageExportConfig,
   HTMLSource,
+  ConverterConfig,
+  ParserStrategy,
+  SerializerStrategy,
 } from "@/types/config.types";
-import type { PresentationDTO } from "@/types/presentation.types";
-import type { Plugin, PluginContext } from "@/types/plugin.types";
+import type { PresentationDTO, SlideDTO } from "@/types/presentation.types";
+import type { ElementDTO } from "@/types/elements.types";
+import type { Plugin } from "@/types/plugin.types";
 import { PluginManager } from "@/lib/plugin-manager";
 import { assertNonNull } from "@/utils/assert";
+import { DEFAULTS } from "@/constants";
 
-export abstract class BaseConverter {
-  protected config: ParserConfig;
+export class BaseConverter {
+  protected config: Required<Pick<ConverterConfig, "selector" | "dimensions">> &
+    ConverterConfig;
   protected pluginManager: PluginManager;
   protected presentation: PresentationDTO | null = null;
   protected source: string | null = null;
-  protected context: PluginContext;
+  protected parser: ParserStrategy;
+  protected serializer: SerializerStrategy;
 
-  constructor(config: Partial<ParserConfig> = {}) {
+  constructor(config: ConverterConfig) {
+    assertNonNull(config.parser, "Parser strategy is required");
+    assertNonNull(config.serializer, "Serializer strategy is required");
+
     this.config = {
+      ...config,
       selector: config.selector || ".slide",
-      dimensions: config.dimensions || { width: 960, height: 540 },
+      dimensions: config.dimensions || {
+        width: DEFAULTS.SLIDE_WIDTH,
+        height: DEFAULTS.SLIDE_HEIGHT,
+      },
     };
+    this.parser = config.parser;
+    this.serializer = config.serializer;
     this.pluginManager = new PluginManager();
-    this.context = {
-      metadata: {},
-      state: new Map(),
-    };
+
+    const corePlugins = config.plugins?.core ?? [];
+    const extensionPlugins = config.plugins?.extensions ?? [];
+
+    corePlugins.forEach((plugin) => this.use(plugin));
+    extensionPlugins.forEach((plugin) => this.use(plugin));
   }
 
   use(plugin: Plugin): this {
@@ -45,21 +62,84 @@ export abstract class BaseConverter {
   async convert(): Promise<this> {
     assertNonNull(this.source, "No HTML source loaded. Call load() first.");
 
+    if (this.config.debug) {
+      console.group("[html-in-pptx-out] convert");
+    }
+    const parserConfig = {
+      selector: this.config.selector,
+      dimensions: this.config.dimensions,
+    };
+
     const html = await this.pluginManager.executeBeforeParse(
       this.source,
-      this.config,
-      this.context,
+      parserConfig,
     );
 
-    this.source = html;
-    this.presentation = await this.parse(this.source);
-    this.context.presentation = this.presentation;
+    const { elements, cleanup } = await this.parser.parse(html, parserConfig);
+
+    if (this.config.debug) {
+      console.log("beforeOnParse", {
+        elements,
+      });
+    }
+
+    const slidesMap = new Map<number, ElementDTO[]>();
+
+    for (const { slideIndex, element, parseContext } of elements) {
+      const dto = await this.pluginManager.executeOnParse(
+        element,
+        parseContext,
+      );
+
+      if (dto) {
+        if (!slidesMap.has(slideIndex)) {
+          slidesMap.set(slideIndex, []);
+        }
+        slidesMap.get(slideIndex)!.push(dto);
+      }
+    }
+
+    if (this.config.debug) {
+      console.log("afterOnParse", {
+        slides: slidesMap,
+      });
+    }
+
+    cleanup();
+
+    const slides: SlideDTO[] = [];
+    const slideIndices = Array.from(slidesMap.keys()).sort((a, b) => a - b);
+
+    for (const slideIndex of slideIndices) {
+      const slide: SlideDTO = {
+        id: crypto.randomUUID(),
+        order: slideIndex,
+        elements: slidesMap.get(slideIndex) || [],
+      };
+      slides.push(slide);
+    }
+
+    this.presentation = {
+      slides,
+      metadata: {
+        createdAt: new Date(),
+      },
+      viewport: this.config.dimensions,
+    };
 
     for (let i = 0; i < this.presentation.slides.length; i++) {
       this.presentation.slides[i] = await this.pluginManager.executeOnSlide(
         this.presentation.slides[i],
-        this.context,
       );
+    }
+
+    this.pluginManager.setPresentation(this.presentation);
+
+    if (this.config.debug) {
+      console.log("post-mortem", {
+        presentation: this.presentation,
+      });
+      console.groupEnd();
     }
 
     return this;
@@ -71,7 +151,7 @@ export abstract class BaseConverter {
       "No presentation to export. Call convert() first.",
     );
 
-    const buffer = await this.serialize(this.presentation, options);
+    const buffer = await this.serializer.serialize(this.presentation, options);
     return buffer;
   }
 
@@ -86,10 +166,4 @@ export abstract class BaseConverter {
     );
     return this.presentation;
   }
-
-  protected abstract parse(html: string): Promise<PresentationDTO>;
-  protected abstract serialize(
-    presentation: PresentationDTO,
-    options: ExportConfig,
-  ): Promise<ArrayBuffer>;
 }

@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 import { readFile } from "fs/promises";
 import { resolve } from "path";
-import { HtmlToPptx } from "./index";
-import { ANSI } from "./constants";
+import { HtmlToPptx } from "@/core/converter";
+import { ANSI } from "@/constants";
 
 function log(text: string): {
   error: () => void;

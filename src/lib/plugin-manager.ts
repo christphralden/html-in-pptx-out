@@ -11,6 +11,10 @@ import type PptxGenJS from 'pptxgenjs';
 
 export class PluginManager implements PluginManagerInterface {
   private plugins: Plugin[] = [];
+  private context: PluginContext = {
+    metadata: {},
+    state: new Map(),
+  };
 
   register(plugin: Plugin): void {
     if (this.plugins.some((p) => p.name === plugin.name)) {
@@ -30,16 +34,16 @@ export class PluginManager implements PluginManagerInterface {
     return [...this.plugins];
   }
 
-  async executeBeforeParse(
-    html: string,
-    config: ParserConfig,
-    context: PluginContext
-  ): Promise<string> {
+  setPresentation(presentation: PresentationDTO): void {
+    this.context.presentation = presentation;
+  }
+
+  async executeBeforeParse(html: string, config: ParserConfig): Promise<string> {
     let result = html;
 
     for (const plugin of this.plugins) {
       if (plugin.beforeParse) {
-        result = await plugin.beforeParse(result, config, context);
+        result = await plugin.beforeParse(result, config, this.context);
       }
     }
 
@@ -49,7 +53,6 @@ export class PluginManager implements PluginManagerInterface {
   async executeOnParse(
     element: HTMLElement,
     parseContext: ParseContext,
-    pluginContext: PluginContext
   ): Promise<ElementDTO | null> {
     for (const plugin of this.plugins) {
       if (!plugin.handles || !plugin.onParse) continue;
@@ -57,22 +60,19 @@ export class PluginManager implements PluginManagerInterface {
       const handlers = new Set(plugin.handles);
       if (!handlers.has(parseContext.elementType)) continue;
 
-      const result = await plugin.onParse(element, parseContext, pluginContext);
+      const result = await plugin.onParse(element, parseContext, this.context);
       if (result) return result;
     }
 
     return null;
   }
 
-  async executeOnSlide(
-    slide: SlideDTO,
-    context: PluginContext
-  ): Promise<SlideDTO> {
+  async executeOnSlide(slide: SlideDTO): Promise<SlideDTO> {
     let result = slide;
 
     for (const plugin of this.plugins) {
       if (plugin.onSlide) {
-        result = await plugin.onSlide(result, context);
+        result = await plugin.onSlide(result, this.context);
       }
     }
 
@@ -82,11 +82,10 @@ export class PluginManager implements PluginManagerInterface {
   async executeAfterGenerate(
     pptx: PptxGenJS,
     presentation: PresentationDTO,
-    context: PluginContext
   ): Promise<void> {
     for (const plugin of this.plugins) {
       if (plugin.afterGenerate) {
-        await plugin.afterGenerate(pptx, presentation, context);
+        await plugin.afterGenerate(pptx, presentation, this.context);
       }
     }
   }

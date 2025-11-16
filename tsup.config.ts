@@ -11,6 +11,7 @@ export default defineConfig([
     treeshake: true,
     minify: false,
     external: ['pptxgenjs'],
+    noExternal: ['dompurify'],
     tsconfig: './tsconfig.json',
   },
   {

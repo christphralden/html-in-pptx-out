@@ -1,35 +1,24 @@
-import type { ExportConfig, ParserConfig } from "@/types/config.types";
-import type { PresentationDTO, SlideDTO } from "@/types/presentation.types";
+import type { ConverterConfig } from "@/types/config.types";
 import { BaseConverter } from "./base-converter";
-import { DEFAULTS } from "@/constants";
+import { DEFAULT_CORE_PLUGINS, DEFAULTS } from "@/constants";
+import { IframeParser } from "@/parsers/iframe";
+import { PptxSerializer } from "@/serializers/pptx";
 
 export class HtmlToPptx extends BaseConverter {
-  constructor(config: Partial<ParserConfig> = {}) {
+  constructor(config: Partial<ConverterConfig> = {}) {
     super({
       selector: config.selector || DEFAULTS.SLIDE_SELECTOR,
-      dimensions: {
-        width: config.dimensions?.width || DEFAULTS.SLIDE_WIDTH,
-        height: config.dimensions?.height || DEFAULTS.SLIDE_HEIGHT,
+      dimensions: config.dimensions || {
+        width: DEFAULTS.SLIDE_WIDTH,
+        height: DEFAULTS.SLIDE_HEIGHT,
       },
+      plugins: {
+        core: config.plugins?.core ?? DEFAULT_CORE_PLUGINS,
+        extensions: config.plugins?.extensions ?? [],
+      },
+      parser: config.parser || new IframeParser(),
+      serializer: config.serializer || new PptxSerializer(),
+      debug: config.debug,
     });
-  }
-
-  protected async parse(_html: string): Promise<PresentationDTO> {
-    const slides: SlideDTO[] = [];
-
-    return {
-      slides,
-      metadata: {
-        createdAt: new Date(),
-      },
-      viewport: this.config.dimensions,
-    };
-  }
-
-  protected async serialize(
-    _presentation: PresentationDTO,
-    _options: ExportConfig,
-  ): Promise<ArrayBuffer> {
-    throw new Error("Not implemented");
   }
 }

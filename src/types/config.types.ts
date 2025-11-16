@@ -1,16 +1,16 @@
 import { Dimensions } from "./base.types";
 import type { PresentationDTO } from "./presentation.types";
-import type { Plugin, PluginContext } from "./plugin.types";
+import type { Plugin, PluginContext, ParseContext } from "./plugin.types";
+
+export interface PluginsConfig {
+  core?: Plugin[];
+  extensions?: Plugin[];
+}
 
 export interface ParserConfig {
   selector: string;
   dimensions: Dimensions;
-}
-
-export interface PluginConfig {
-  name: string;
-  enabled?: boolean;
-  options?: Record<string, unknown>;
+  plugins?: PluginsConfig;
 }
 
 export interface ExportConfig {
@@ -40,10 +40,33 @@ export interface HTMLSourceConfig {
   content: string;
 }
 
+export interface ParserElement {
+  slideIndex: number;
+  element: HTMLElement;
+  parseContext: ParseContext;
+}
+
+export interface ParserResult {
+  elements: ParserElement[];
+  cleanup: () => void;
+}
+
 export interface ParserStrategy {
-  parse(html: string, config: ParserConfig): Promise<PresentationDTO>;
+  parse(html: string, config: ParserConfig): Promise<ParserResult>;
 }
 
 export interface SerializerStrategy {
-  serialize(presentation: PresentationDTO): Promise<ArrayBuffer>;
+  serialize(
+    presentation: PresentationDTO,
+    options: ExportConfig,
+  ): Promise<ArrayBuffer>;
+}
+
+export interface ConverterConfig {
+  selector?: string;
+  dimensions?: Dimensions;
+  plugins?: PluginsConfig;
+  parser?: ParserStrategy;
+  serializer?: SerializerStrategy;
+  debug?: boolean;
 }

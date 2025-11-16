@@ -2,7 +2,7 @@
   "compilerOptions": {
     "target": "ES2022",
     "module": "ESNext",
-    "lib": ["ES2022", "DOM"],
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
     "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "allowJs": true,
@@ -28,6 +28,8 @@
       "@/core/*": ["./src/core/*"],
       "@/plugins/*": ["./src/plugins/*"],
       "@/utils/*": ["./src/utils/*"],
+      "@/parsers/*": ["./src/parsers/*"],
+      "@/serializers/*": ["./src/serializers/*"],
       "@/constants": ["./src/constants.ts"]
     }
   },

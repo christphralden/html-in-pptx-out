@@ -17,14 +17,14 @@
       };
     </script>
   </head>
-  <body class="font-mono bg-white text-neutral-900 min-h-screen flex flex-col">
-    <main class="flex-1 max-w-2xl mx-auto w-full px-6 py-12">
-      <h1 class="text-2xl font-semibold tracking-tight mb-8">
+  <body class="font-mono bg-white text-neutral-900 h-screen flex flex-col overflow-hidden">
+    <main class="flex-1 max-w-2xl mx-auto w-full px-6 py-6 flex flex-col overflow-hidden">
+      <h1 class="text-2xl font-semibold tracking-tight mb-6">
         html-in-pptx-out
       </h1>
 
-      <div class="mb-8">
-        <div class="flex gap-6 border-b border-neutral-200 mb-6">
+      <div class="mb-4">
+        <div class="flex gap-6 border-b border-neutral-200 mb-4">
           <button
             id="tabString"
             class="pb-2 text-sm border-b-2 border-neutral-900"
@@ -44,7 +44,7 @@
             <label class="block text-xs text-neutral-500 mb-2">input</label>
             <textarea
               id="htmlInput"
-              class="w-full h-48 p-3 bg-neutral-50 border border-neutral-200 rounded text-sm resize-y focus:outline-none focus:border-neutral-400"
+              class="w-full h-32 p-3 bg-neutral-50 border border-neutral-200 rounded text-sm resize-y focus:outline-none focus:border-neutral-400"
               placeholder='<body>
   <div class="slide">
     <h1>Title</h1>
@@ -79,13 +79,13 @@
             <label class="block text-xs text-neutral-500 mb-2">preview</label>
             <pre
               id="fileContent"
-              class="w-full h-48 p-3 bg-neutral-50 border border-neutral-200 rounded text-xs overflow-auto"
+              class="w-full h-32 p-3 bg-neutral-50 border border-neutral-200 rounded text-xs overflow-auto"
             ></pre>
           </div>
         </div>
       </div>
 
-      <div class="mb-8">
+      <div class="mb-4">
         <label class="block text-xs text-neutral-500 mb-2"
           >slide selector</label
         >
@@ -97,7 +97,7 @@
         />
       </div>
 
-      <div class="mb-8">
+      <div class="mb-4 flex gap-3">
         <button
           id="convertBtn"
           disabled
@@ -105,22 +105,27 @@
         >
           convert
         </button>
-        <span id="status" class="ml-3 text-xs text-neutral-500"></span>
+        <button
+          id="exportBtn"
+          disabled
+          class="px-4 py-2 bg-blue-600 text-white text-sm rounded disabled:bg-neutral-300 disabled:cursor-not-allowed"
+        >
+          export to pptx
+        </button>
+        <span id="status" class="ml-3 text-xs text-neutral-500 self-center"></span>
       </div>
 
-      <div>
+      <div class="flex-1 flex flex-col min-h-0">
         <label class="block text-xs text-neutral-500 mb-2">output</label>
         <pre
           id="output"
-          class="w-full min-h-32 p-3 bg-neutral-50 border border-neutral-200 rounded text-xs overflow-auto"
-        >
-waiting for input...</pre
-        >
+          class="flex-1 p-3 bg-neutral-50 border border-neutral-200 rounded text-xs overflow-auto"
+        >waiting for input...</pre>
       </div>
     </main>
 
     <footer
-      class="max-w-2xl mx-auto w-full px-6 py-8 border-t border-neutral-200"
+      class="max-w-2xl mx-auto w-full px-6 py-4 border-t border-neutral-200"
     >
       <a
         href="https://github.com/christphralden"
@@ -144,11 +149,13 @@ waiting for input...</pre
       const fileContent = document.getElementById("fileContent");
       const slideSelector = document.getElementById("slideSelector");
       const convertBtn = document.getElementById("convertBtn");
+      const exportBtn = document.getElementById("exportBtn");
       const status = document.getElementById("status");
       const output = document.getElementById("output");
 
       let activeTab = "string";
       let loadedFileContent = "";
+      let currentConverter = null;
 
       chooseFileBtn.addEventListener("click", () => fileInput.click());
 
@@ -158,6 +165,7 @@ waiting for input...</pre
         } else {
           convertBtn.disabled = !loadedFileContent;
         }
+        exportBtn.disabled = !currentConverter;
       }
 
       function switchTab(tab) {
@@ -203,20 +211,23 @@ waiting for input...</pre
         if (!html) return;
 
         convertBtn.disabled = true;
+        currentConverter = null;
         status.textContent = "converting...";
 
         try {
           const { HtmlToPptx } = await import("../dist/index.js");
 
           const converter = new HtmlToPptx({
-            slideSelector: slideSelector.value || ".slide",
+            selector: slideSelector.value || ".slide",
+            debug: true,
           });
 
           await converter.load(html).convert();
-          const dto = converter.getPresentation();
+          currentConverter = converter;
+          const presentation = converter.getPresentation();
 
           output.textContent = JSON.stringify(
-            dto,
+            presentation,
             (key, value) => {
               if (value instanceof Date) return value.toISOString();
               if (value instanceof Map) return Object.fromEntries(value);
@@ -225,10 +236,41 @@ waiting for input...</pre
             2,
           );
 
-          status.textContent = `converted: ${dto.slides.length} slide(s)`;
+          status.textContent = `converted: ${presentation.slides.length} slide(s)`;
         } catch (err) {
           output.textContent = err.stack || err.message;
           status.textContent = "failed";
+        } finally {
+          updateButtonState();
+        }
+      });
+
+      exportBtn.addEventListener("click", async () => {
+        if (!currentConverter) return;
+
+        exportBtn.disabled = true;
+        status.textContent = "exporting...";
+
+        try {
+          const buffer = await currentConverter.export({
+            format: "pptx",
+            filename: "presentation.pptx",
+          });
+
+          const blob = new Blob([buffer], {
+            type: "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+          });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = "presentation.pptx";
+          a.click();
+          URL.revokeObjectURL(url);
+
+          status.textContent = "exported: presentation.pptx";
+        } catch (err) {
+          output.textContent = err.stack || err.message;
+          status.textContent = "export failed";
         } finally {
           updateButtonState();
         }
