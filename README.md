@@ -122,9 +122,9 @@ sequenceDiagram
 ```mermaid
 graph LR
     A[HTML String] --> B[Parser]
-    B --> C[ParserElement[]]
+    B --> C[Array<ParserElement>]
     C --> D[Plugins onParse]
-    D --> E[ElementDTO[]]
+    D --> E[Array<ElementDTO>]
     E --> F[PresentationDTO]
     F --> G[Plugins onSlide]
     G --> H[Serializer]
@@ -476,9 +476,15 @@ class PluginManager {
   getPlugins(): Plugin[];
   setPresentation(presentation: PresentationDTO): void;
   executeBeforeParse(html: string, config: ParserConfig): Promise<string>;
-  executeOnParse(element: HTMLElement, parseContext: ParseContext): Promise<ElementDTO | null>;
+  executeOnParse(
+    element: HTMLElement,
+    parseContext: ParseContext,
+  ): Promise<ElementDTO | null>;
   executeOnSlide(slide: SlideDTO): Promise<SlideDTO>;
-  executeAfterGenerate(pptx: PptxGenJS, presentation: PresentationDTO): Promise<void>;
+  executeAfterGenerate(
+    pptx: PptxGenJS,
+    presentation: PresentationDTO,
+  ): Promise<void>;
 }
 ```
 
