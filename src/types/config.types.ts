@@ -1,6 +1,6 @@
 import { Dimensions } from "./base.types";
 import type { PresentationDTO } from "./presentation.types";
-import type { Plugin, PluginContext, ParseContext } from "./plugin.types";
+import type { Plugin, PluginContext, ParseContext, PluginManagerInterface } from "./plugin.types";
 
 export interface PluginsConfig {
   core?: Plugin[];
@@ -56,6 +56,7 @@ export interface ParserStrategy {
 }
 
 export interface SerializerStrategy {
+  setPluginManager?(pluginManager: PluginManagerInterface): void;
   serialize(
     presentation: PresentationDTO,
     options: ExportConfig,

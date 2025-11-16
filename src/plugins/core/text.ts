@@ -13,7 +13,7 @@ import {
 } from "@/lib/extractors/position";
 import { classifyText } from "@/lib/extractors/classifier";
 
-export const textPlugin: Plugin = {
+export const textPlugin: Plugin<TextElementDTO> = {
   name: "core:text",
   handles: ["text"],
   onParse: (element, parseContext) => {

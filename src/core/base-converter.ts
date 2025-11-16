@@ -38,6 +38,10 @@ export class BaseConverter {
     this.serializer = config.serializer;
     this.pluginManager = new PluginManager();
 
+    if (this.serializer.setPluginManager) {
+      this.serializer.setPluginManager(this.pluginManager);
+    }
+
     const corePlugins = config.plugins?.core ?? [];
     const extensionPlugins = config.plugins?.extensions ?? [];
 

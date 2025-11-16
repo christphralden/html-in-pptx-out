@@ -1,15 +1,23 @@
 import DOMPurify from "dompurify";
+import { FONT_LIST } from "src/fontlists.generated";
 
 export const sanitizeHtml = (html: string): string => {
   return DOMPurify.sanitize(html);
 };
 
 export const sanitizeFontFamily = (fontFamily: string): string => {
-  const first = fontFamily.split(",")[0];
-  return first
-    .trim()
-    .replace(/^["']|["']$/g, "")
-    .trim();
+  const fonts = fontFamily.split(",").map((font) => {
+    const f = font
+      .trim()
+      .replace(/^["']|["']$/g, "")
+      .trim();
+
+    if (!FONT_LIST.has(f.toLowerCase())) {
+      return null;
+    }
+    return f;
+  });
+  return fonts.filter((font) => font != null).join(", ");
 };
 
 export const sanitizeColor = (color: string): string => {

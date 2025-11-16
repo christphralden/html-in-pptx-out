@@ -2,7 +2,7 @@ import type { ConverterConfig } from "@/types/config.types";
 import { BaseConverter } from "./base-converter";
 import { DEFAULT_CORE_PLUGINS, DEFAULTS } from "@/constants";
 import { IframeParser } from "@/parsers/iframe";
-import { PptxSerializer } from "@/serializers/pptx";
+import { PptxSerializer } from "@/serializers/pptxgenjs";
 
 export class HtmlToPptx extends BaseConverter {
   constructor(config: Partial<ConverterConfig> = {}) {

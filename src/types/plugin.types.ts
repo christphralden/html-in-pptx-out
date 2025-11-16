@@ -13,14 +13,17 @@ export interface ParseContext {
   slideElement: HTMLElement;
 }
 
-export interface Plugin {
+export interface Plugin<
+  TDTO extends ElementDTO = ElementDTO,
+  TSerializer = PptxGenJS,
+> {
   name: string;
   version?: string;
   handles?: ElementType[];
   beforeParse?: BeforeParseFn;
-  onParse?: OnParseFn;
+  onParse?: OnParseFn<TDTO>;
   onSlide?: OnSlideFn;
-  afterGenerate?: AfterGenerateFn;
+  afterGenerate?: AfterGenerateFn<TSerializer>;
 }
 
 export type BeforeParseFn = (
@@ -29,19 +32,19 @@ export type BeforeParseFn = (
   context: PluginContext,
 ) => Promise<string> | string;
 
-export type OnParseFn = (
+export type OnParseFn<TDTO extends ElementDTO = ElementDTO> = (
   element: HTMLElement,
   parseContext: ParseContext,
   pluginContext: PluginContext,
-) => Promise<ElementDTO | null> | ElementDTO | null;
+) => Promise<TDTO | null> | TDTO | null;
 
 export type OnSlideFn = (
   slide: SlideDTO,
   context: PluginContext,
 ) => Promise<SlideDTO> | SlideDTO;
 
-export type AfterGenerateFn = (
-  pptx: PptxGenJS,
+export type AfterGenerateFn<TSerializer = PptxGenJS> = (
+  pptx: TSerializer,
   presentation: PresentationDTO,
   context: PluginContext,
 ) => Promise<void> | void;
@@ -63,8 +66,5 @@ export interface PluginManagerInterface {
     parseContext: ParseContext,
   ): Promise<ElementDTO | null>;
   executeOnSlide(slide: SlideDTO): Promise<SlideDTO>;
-  executeAfterGenerate(
-    pptx: PptxGenJS,
-    presentation: PresentationDTO,
-  ): Promise<void>;
+  executeAfterGenerate(pptx: PptxGenJS, presentation: PresentationDTO): Promise<void>;
 }

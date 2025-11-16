@@ -67,4 +67,4 @@ export { DEFAULTS, DEFAULT_CORE_PLUGINS } from "@/constants";
 export * from "@/plugins/core";
 
 export { IframeParser } from "@/parsers/iframe";
-export { PptxSerializer } from "@/serializers/pptx";
+export { PptxSerializer } from "@/serializers/pptxgenjs";
