@@ -120,7 +120,7 @@ export class BaseConverter {
     }
 
     this.presentation = {
-      slides,
+      slides: slides,
       metadata: {
         createdAt: new Date(),
       },
