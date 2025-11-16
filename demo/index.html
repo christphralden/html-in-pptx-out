@@ -17,123 +17,147 @@
       };
     </script>
   </head>
-  <body class="font-mono bg-white text-neutral-900 h-screen flex flex-col overflow-hidden">
-    <main class="flex-1 max-w-2xl mx-auto w-full px-6 py-6 flex flex-col overflow-hidden">
-      <h1 class="text-2xl font-semibold tracking-tight mb-6">
-        html-in-pptx-out
-      </h1>
 
-      <div class="mb-4">
-        <div class="flex gap-6 border-b border-neutral-200 mb-4">
-          <button
-            id="tabString"
-            class="pb-2 text-sm border-b-2 border-neutral-900"
-          >
-            html string
-          </button>
-          <button
-            id="tabFile"
-            class="pb-2 text-sm border-b-2 border-transparent text-neutral-500"
-          >
-            html file
-          </button>
-        </div>
+  <body
+    class="font-mono bg-white text-neutral-900 h-screen flex flex-col overflow-hidden"
+  >
+    <header class="px-12 py-4 border-b border-neutral-200">
+      <h1 class="text-2xl font-semibold tracking-tight">html-in-pptx-out</h1>
+    </header>
 
-        <div id="panelString" class="space-y-4">
-          <div>
-            <label class="block text-xs text-neutral-500 mb-2">input</label>
-            <textarea
-              id="htmlInput"
-              class="w-full h-32 p-3 bg-neutral-50 border border-neutral-200 rounded text-sm resize-y focus:outline-none focus:border-neutral-400"
-              placeholder='<body>
+    <main class="flex-1 flex overflow-hidden">
+      <div
+        class="w-1/2 border-r border-neutral-200 p-12 flex flex-col overflow-hidden"
+      >
+        <div class="mb-4">
+          <div class="flex gap-6 border-b border-neutral-200 mb-4">
+            <button
+              id="tabString"
+              class="pb-2 text-sm border-b-2 border-neutral-900"
+            >
+              html string
+            </button>
+            <button
+              id="tabFile"
+              class="pb-2 text-sm border-b-2 border-transparent text-neutral-500"
+            >
+              html file
+            </button>
+          </div>
+
+          <div id="panelString" class="space-y-4">
+            <div>
+              <label class="block text-xs text-neutral-500 mb-2">input</label>
+              <textarea
+                id="htmlInput"
+                class="w-full h-32 p-3 bg-neutral-50 border border-neutral-200 rounded text-sm resize-y focus:outline-none focus:border-neutral-400"
+                placeholder='<body>
   <div class="slide">
     <h1>Title</h1>
   </div>
 </body>'
-            ></textarea>
-          </div>
-        </div>
-
-        <div id="panelFile" class="space-y-4 hidden">
-          <div>
-            <label class="block text-xs text-neutral-500 mb-2">file</label>
-            <div class="flex items-center gap-3">
-              <button
-                id="chooseFileBtn"
-                class="px-4 py-2 bg-neutral-900 text-white text-sm rounded"
-              >
-                choose file
-              </button>
-              <span id="fileName" class="text-sm text-neutral-500"
-                >no file chosen</span
-              >
-              <input
-                type="file"
-                id="fileInput"
-                accept=".html,.htm"
-                class="hidden"
-              />
+              ></textarea>
             </div>
           </div>
-          <div id="filePreview" class="hidden">
-            <label class="block text-xs text-neutral-500 mb-2">preview</label>
-            <pre
-              id="fileContent"
-              class="w-full h-32 p-3 bg-neutral-50 border border-neutral-200 rounded text-xs overflow-auto"
-            ></pre>
+
+          <div id="panelFile" class="space-y-4 hidden">
+            <div>
+              <label class="block text-xs text-neutral-500 mb-2">file</label>
+              <div class="flex items-center gap-3">
+                <button
+                  id="chooseFileBtn"
+                  class="px-4 py-2 bg-neutral-900 text-white text-sm rounded"
+                >
+                  choose file
+                </button>
+                <span id="fileName" class="text-sm text-neutral-500"
+                  >no file chosen</span
+                >
+                <input
+                  type="file"
+                  id="fileInput"
+                  accept=".html,.htm"
+                  class="hidden"
+                />
+              </div>
+            </div>
+            <div id="filePreview" class="hidden">
+              <label class="block text-xs text-neutral-500 mb-2">preview</label>
+              <pre
+                id="fileContent"
+                class="w-full h-32 p-3 bg-neutral-50 border border-neutral-200 rounded text-xs overflow-auto"
+              ></pre>
+            </div>
           </div>
+        </div>
+
+        <div class="mb-4">
+          <label class="block text-xs text-neutral-500 mb-2"
+            >slide selector</label
+          >
+          <input
+            type="text"
+            id="slideSelector"
+            value=".slide"
+            class="w-full p-3 bg-neutral-50 border border-neutral-200 rounded text-sm focus:outline-none focus:border-neutral-400"
+          />
+        </div>
+
+        <div class="mb-4 flex gap-3">
+          <button
+            id="convertBtn"
+            disabled
+            class="px-4 py-2 bg-neutral-900 text-white text-sm rounded disabled:bg-neutral-300 disabled:cursor-not-allowed"
+          >
+            convert
+          </button>
+          <button
+            id="exportBtn"
+            disabled
+            class="px-4 py-2 bg-blue-600 text-white text-sm rounded disabled:bg-neutral-300 disabled:cursor-not-allowed"
+          >
+            export to pptx
+          </button>
+          <span
+            id="status"
+            class="ml-3 text-xs text-neutral-500 self-center"
+          ></span>
+        </div>
+
+        <div class="flex-1 flex flex-col min-h-0">
+          <label class="block text-xs text-neutral-500 mb-2">output</label>
+          <pre
+            id="output"
+            class="flex-1 p-3 bg-neutral-50 border border-neutral-200 rounded text-xs overflow-auto"
+          >
+waiting for input...</pre
+          >
         </div>
       </div>
 
-      <div class="mb-4">
-        <label class="block text-xs text-neutral-500 mb-2"
-          >slide selector</label
+      <div class="w-1/2 p-12 flex flex-col overflow-hidden bg-neutral-50">
+        <label class="block text-neutral-500 mb-2">preview</label>
+        <div
+          class="flex-1 bg-white border border-neutral-200 rounded overflow-auto"
         >
-        <input
-          type="text"
-          id="slideSelector"
-          value=".slide"
-          class="w-full p-3 bg-neutral-50 border border-neutral-200 rounded text-sm focus:outline-none focus:border-neutral-400"
-        />
-      </div>
-
-      <div class="mb-4 flex gap-3">
-        <button
-          id="convertBtn"
-          disabled
-          class="px-4 py-2 bg-neutral-900 text-white text-sm rounded disabled:bg-neutral-300 disabled:cursor-not-allowed"
-        >
-          convert
-        </button>
-        <button
-          id="exportBtn"
-          disabled
-          class="px-4 py-2 bg-blue-600 text-white text-sm rounded disabled:bg-neutral-300 disabled:cursor-not-allowed"
-        >
-          export to pptx
-        </button>
-        <span id="status" class="ml-3 text-xs text-neutral-500 self-center"></span>
-      </div>
-
-      <div class="flex-1 flex flex-col min-h-0">
-        <label class="block text-xs text-neutral-500 mb-2">output</label>
-        <pre
-          id="output"
-          class="flex-1 p-3 bg-neutral-50 border border-neutral-200 rounded text-xs overflow-auto"
-        >waiting for input...</pre>
+          <iframe
+            id="previewFrame"
+            class="w-full h-full border-0"
+            sandbox="allow-scripts allow-same-origin"
+          ></iframe>
+        </div>
       </div>
     </main>
 
-    <footer
-      class="max-w-2xl mx-auto w-full px-6 py-4 border-t border-neutral-200"
-    >
+    <footer class="px-12 py-4 border-t border-neutral-200">
       <a
         href="https://github.com/christphralden"
         target="_blank"
         rel="noopener"
         class="text-xs text-neutral-500 hover:text-neutral-900"
-        >Created by @christphralden</a
       >
+        Created by @christphralden
+      </a>
     </footer>
 
     <script type="module">
@@ -159,6 +183,14 @@
 
       chooseFileBtn.addEventListener("click", () => fileInput.click());
 
+      function updateIframe(html) {
+        const iframe = document.getElementById("previewFrame");
+        const doc = iframe.contentDocument || iframe.contentWindow.document;
+        doc.open();
+        doc.write(html);
+        doc.close();
+      }
+
       function updateButtonState() {
         if (activeTab === "string") {
           convertBtn.disabled = !htmlInput.value.trim();
@@ -177,6 +209,8 @@
           tabFile.classList.add("border-transparent", "text-neutral-500");
           panelString.classList.remove("hidden");
           panelFile.classList.add("hidden");
+
+          updateIframe(htmlInput.value);
         } else {
           tabFile.classList.add("border-neutral-900");
           tabFile.classList.remove("border-transparent", "text-neutral-500");
@@ -184,6 +218,8 @@
           tabString.classList.add("border-transparent", "text-neutral-500");
           panelFile.classList.remove("hidden");
           panelString.classList.add("hidden");
+
+          updateIframe(loadedFileContent);
         }
         updateButtonState();
       }
@@ -191,7 +227,10 @@
       tabString.addEventListener("click", () => switchTab("string"));
       tabFile.addEventListener("click", () => switchTab("file"));
 
-      htmlInput.addEventListener("input", updateButtonState);
+      htmlInput.addEventListener("input", () => {
+        updateButtonState();
+        updateIframe(htmlInput.value);
+      });
 
       fileInput.addEventListener("change", async (e) => {
         const file = e.target.files[0];
@@ -201,6 +240,9 @@
           fileContent.textContent = loadedFileContent;
           filePreview.classList.remove("hidden");
           status.textContent = `loaded: ${file.name}`;
+
+          updateIframe(loadedFileContent);
+
           updateButtonState();
         }
       });
@@ -209,6 +251,8 @@
         const html =
           activeTab === "string" ? htmlInput.value.trim() : loadedFileContent;
         if (!html) return;
+
+        updateIframe(html);
 
         convertBtn.disabled = true;
         currentConverter = null;
@@ -277,6 +321,7 @@
       });
 
       updateButtonState();
+      updateIframe("");
     </script>
   </body>
 </html>
