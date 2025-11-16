@@ -89,32 +89,23 @@ node dist/cli.js input.html output.pptx --selector .slide
 sequenceDiagram
     participant User
     participant HtmlToPptx
-    participant BaseConverter
     participant PluginManager
 
     User->>HtmlToPptx: new HtmlToPptx(config)
-    HtmlToPptx->>BaseConverter: super(config)
-
     User->>HtmlToPptx: load(html)
-    Note over HtmlToPptx,BaseConverter: inherited from BaseConverter
-
     User->>HtmlToPptx: convert()
-    HtmlToPptx->>BaseConverter: convert()
-    BaseConverter->>PluginManager: executeBeforeParse(html)
-    PluginManager-->>BaseConverter: html
-    BaseConverter->>HtmlToPptx: parse(html)
-    HtmlToPptx-->>BaseConverter: PresentationDTO
+    HtmlToPptx->>PluginManager: executeBeforeParse(html)
+    PluginManager-->>HtmlToPptx: html
+    HtmlToPptx->>HtmlToPptx: parse(html)
+    Note over HtmlToPptx: PresentationDTO created
     loop Each Slide
-        BaseConverter->>PluginManager: executeOnSlide(slide)
-        PluginManager-->>BaseConverter: slide
+        HtmlToPptx->>PluginManager: executeOnSlide(slide)
+        PluginManager-->>HtmlToPptx: slide
     end
-
     User->>HtmlToPptx: export(options)
-    HtmlToPptx->>BaseConverter: export(options)
-    BaseConverter->>HtmlToPptx: serialize(presentation)
+    HtmlToPptx->>HtmlToPptx: serialize(presentation)
     HtmlToPptx->>PluginManager: executeAfterGenerate(pptx)
-    HtmlToPptx-->>BaseConverter: ArrayBuffer
-    BaseConverter-->>User: ArrayBuffer
+    HtmlToPptx-->>User: ArrayBuffer
 ```
 
 ### Data Flow
