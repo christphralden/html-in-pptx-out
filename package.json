@@ -14,7 +14,7 @@
     }
   },
   "bin": {
-    "html-in-pptx-out": "./dist/cli.mjs"
+    "html-in-pptx-out": "dist/cli.mjs"
   },
   "files": [
     "dist"
@@ -40,7 +40,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/christphralden/html-in-pptx-out.git"
+    "url": "git+https://github.com/christphralden/html-in-pptx-out.git"
   },
   "engines": {
     "node": ">=18.0.0"
