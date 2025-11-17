@@ -5,7 +5,7 @@ import { linePlugin } from "@/plugins/core/line.plugin";
 import { tablePlugin } from "@/plugins/core/table.plugin";
 import { plotlyPlugin } from "@/plugins/core/plotly.plugin";
 import { imagePlugin } from "@/plugins/core/image.plugin";
-import { iconPlugin } from "@/plugins/core/icon.plugin";
+import { fontAwesomePlugin } from "@/plugins/core/fontawesome.plugin";
 
 export const ANSI = {
   reset: "\x1b[0m",
@@ -47,7 +47,7 @@ export const DEFAULT_CORE_PLUGINS: Plugin[] = [
   linePlugin,
   tablePlugin,
   imagePlugin,
-  iconPlugin,
+  fontAwesomePlugin,
   plotlyPlugin,
 ];
 export const COORDINATE_BUFFER = 1.02 as const;

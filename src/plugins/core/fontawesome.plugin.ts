@@ -11,20 +11,20 @@ import {
 } from "@/lib/extractors/typography";
 import {
   detectIconVariant,
-  extractIconClass,
+  parseIconClass,
   fetchIconFromCDN,
   createIconSVGDataURI,
-} from "@/lib/extractors/icon";
+} from "@/lib/extractors/fontawesome";
 import { sanitizeColor } from "@/utils/sanitize";
 
-export const iconPlugin: Plugin<ImageElementDTO> = {
-  name: "core:icon",
+export const fontAwesomePlugin: Plugin<ImageElementDTO> = {
+  name: "core:icon-fontawesome",
   handles: ["icon"],
   onParse: async (element, parseContext) => {
     const { computedStyle, boundingRect, slideElement } = parseContext;
 
     const classList = Array.from(element.classList);
-    const iconClass = extractIconClass(classList);
+    const iconClass = parseIconClass(classList);
 
     if (!iconClass) return null;
 

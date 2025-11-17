@@ -158,8 +158,14 @@ export const plotlyPlugin: Plugin = {
           type: "chart",
           originalType: "image",
           id: crypto.randomUUID(),
-          position: matchedImage.position,
-          dimensions: matchedImage.dimensions,
+          position: {
+            left: chartBounds.left,
+            top: chartBounds.top,
+          },
+          dimensions: {
+            width: chartBounds.width,
+            height: chartBounds.height,
+          },
           data: chartDataDTO,
           sourceLibrary: chartData.sourceLibrary,
         };

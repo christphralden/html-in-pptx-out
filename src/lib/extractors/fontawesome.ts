@@ -16,10 +16,8 @@ export const detectIconVariant = (classList: string[]): string => {
   return "solid";
 };
 
-export const extractIconClass = (classList: string[]): string | null => {
-  return (
-    classList.find((cls) => cls.startsWith("fa-") && cls !== "fa") || null
-  );
+export const parseIconClass = (classList: string[]): string | null => {
+  return classList.find((cls) => cls.startsWith("fa-") && cls !== "fa") || null;
 };
 
 const fetchIconFromCDNInternal = async (

@@ -100,7 +100,7 @@ const calculateLinePositions = (
 export const linePlugin: Plugin<LineElementDTO> = {
   name: "core:line",
   handles: ["line"],
-  onParse: (element, parseContext) => {
+  onParse: (_element, parseContext) => {
     const { computedStyle, boundingRect, tagName, slideElement } = parseContext;
 
     const slideRect = slideElement.getBoundingClientRect();
