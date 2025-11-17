@@ -1,7 +1,8 @@
 import { Plugin } from "@/types/plugin.types";
-import { textPlugin } from "@/plugins/core/text";
-import { shapePlugin } from "@/plugins/core/shape";
-import { linePlugin } from "@/plugins/core/line";
+import { textPlugin } from "@/plugins/core/text.plugin";
+import { shapePlugin } from "@/plugins/core/shape.plugin";
+import { linePlugin } from "@/plugins/core/line.plugin";
+import { tablePlugin } from "@/plugins/core/table.plugin";
 
 export const ANSI = {
   reset: "\x1b[0m",
@@ -34,23 +35,5 @@ export const FONT_WEIGHT_SUFFIX_MAP: Record<number, string> = {
   900: "Black",
 } as const;
 
-export const NAMED_COLORS: Record<string, string> = {
-  black: "000000",
-  white: "FFFFFF",
-  red: "FF0000",
-  green: "008000",
-  blue: "0000FF",
-  yellow: "FFFF00",
-  cyan: "00FFFF",
-  magenta: "FF00FF",
-  gray: "808080",
-  grey: "808080",
-  orange: "FFA500",
-  purple: "800080",
-  pink: "FFC0CB",
-  brown: "A52A2A",
-  transparent: "FFFFFF",
-} as const;
-
-export const DEFAULT_CORE_PLUGINS: Plugin[] = [textPlugin, shapePlugin, linePlugin];
+export const DEFAULT_CORE_PLUGINS: Plugin[] = [textPlugin, shapePlugin, linePlugin, tablePlugin];
 export const COORDINATE_BUFFER = 1.03 as const;

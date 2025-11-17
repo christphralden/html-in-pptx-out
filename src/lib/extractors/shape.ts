@@ -8,13 +8,13 @@ import type {
 } from "@/types/base.types";
 import { sanitizeColor } from "@/utils/sanitize";
 
-const parseGradientStops = (gradientString: string): GradientStop[] => {
+const parseGradientStops = (rgba: string): GradientStop[] => {
   const stops: GradientStop[] = [];
   const colorStopRegex = /(rgba?\([^)]+\)|#[0-9a-fA-F]{3,6}|\w+)\s*([\d.]+%)?/g;
   let match;
   let index = 0;
 
-  while ((match = colorStopRegex.exec(gradientString)) !== null) {
+  while ((match = colorStopRegex.exec(rgba)) !== null) {
     const [, colorPart, positionPart] = match;
     const hex = sanitizeColor(colorPart);
     if (!hex) continue;
@@ -33,8 +33,8 @@ const parseGradientStops = (gradientString: string): GradientStop[] => {
   return stops;
 };
 
-const parseGradientAngle = (gradientString: string): number => {
-  const degMatch = gradientString.match(/(\d+)deg/);
+const parseGradientAngle = (gradient: string): number => {
+  const degMatch = gradient.match(/(\d+)deg/);
   if (degMatch) {
     return parseInt(degMatch[1], 10);
   }
@@ -51,7 +51,7 @@ const parseGradientAngle = (gradientString: string): number => {
   };
 
   for (const [direction, angle] of Object.entries(directionMap)) {
-    if (gradientString.includes(direction)) {
+    if (gradient.includes(direction)) {
       return angle;
     }
   }

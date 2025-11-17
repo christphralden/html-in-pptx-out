@@ -1,7 +1,8 @@
 import type { ChartElementDTO } from "@/types/elements.types";
 import type { Dimensions } from "@/types/base.types";
 import type PptxGenJS from "pptxgenjs";
-import { positionToPercentage, dimensionsToPercentage } from "../utils/units";
+import { dimensionsToPercentage } from "@/utils/units";
+import { positionToPercentage } from "@/utils/units";
 
 const CHART_TYPE_MAP: Record<string, string> = {
   bar: "bar",

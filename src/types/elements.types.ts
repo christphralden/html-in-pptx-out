@@ -72,6 +72,7 @@ export interface TableCellDTO {
 export interface TableElementDTO extends Elements {
   type: Extract<ElementType, "table">;
   rows: TableCellDTO[][];
+  colWidths?: number[];
   cellMinHeight?: number;
   headerRow?: boolean;
   headerColumn?: boolean;

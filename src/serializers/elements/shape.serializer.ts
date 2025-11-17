@@ -1,12 +1,10 @@
 import type { ShapeElementDTO } from "@/types/elements.types";
 import type { Dimensions, Stroke } from "@/types/base.types";
 import PptxGenJS from "pptxgenjs";
-import {
-  positionToPercentage,
-  dimensionsToPercentage,
-  pxToPoints,
-  pxToInches,
-} from "../utils/units";
+import { dimensionsToPercentage } from "@/utils/units";
+import { positionToPercentage } from "@/utils/units";
+import { pxToPoints } from "@/utils/units";
+import { pxToInches } from "@/utils/units";
 
 const STROKE_DASH_MAP: Record<
   string,

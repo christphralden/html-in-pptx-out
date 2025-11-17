@@ -1,11 +1,9 @@
 import type { TextElementDTO, TextRun } from "@/types/elements.types";
 import type { Dimensions, Typography } from "@/types/base.types";
 import type PptxGenJS from "pptxgenjs";
-import {
-  positionToPercentage,
-  dimensionsToPercentage,
-  pxToPoints,
-} from "../utils/units";
+import { dimensionsToPercentage } from "@/utils/units";
+import { positionToPercentage } from "@/utils/units";
+import { pxToPoints } from "@/utils/units";
 import { FONT_WEIGHT_SUFFIX_MAP } from "@/constants";
 
 const transformFontfactToPptxFontface = (

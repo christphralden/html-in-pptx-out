@@ -2,7 +2,7 @@ import type { SerializerStrategy, ExportConfig } from "@/types/config.types";
 import type { PresentationDTO } from "@/types/presentation.types";
 import type { PluginManagerInterface } from "@/types/plugin.types";
 import PptxGenJS from "pptxgenjs";
-import { pxToInches } from "./utils/units";
+import { pxToInches } from "@/utils/units";
 import { serializeText } from "./elements/text.serializer";
 import { serializeShape } from "./elements/shape.serializer";
 import { serializeLine } from "./elements/line.serializer";
@@ -63,7 +63,7 @@ export class PptxSerializer implements SerializerStrategy {
             serializeShape(slide, element, presentation.viewport);
             break;
           case "table":
-            // serializeTable(slide, element, presentation.viewport);
+            serializeTable(slide, element, presentation.viewport);
             break;
           case "chart":
             // serializeChart(slide, element, presentation.viewport);

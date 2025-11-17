@@ -2,7 +2,7 @@ import type { Typography, Padding } from "@/types/base.types";
 import { sanitizeFontFamily, sanitizeColor } from "@/utils/sanitize";
 import { DEFAULTS } from "@/constants";
 
-export const extractFontWeight = (value: string): string | undefined => {
+export const parseFontWeight = (value: string): string | undefined => {
   const num = parseInt(value, 10);
   if (!isNaN(num)) return String(num);
   if (value === "bold") return "700";
@@ -12,7 +12,7 @@ export const extractFontWeight = (value: string): string | undefined => {
   return undefined;
 };
 
-export const extractFontStyle = (
+export const parseFontStyle = (
   value: string,
 ): Typography["fontStyle"] | undefined => {
   if (value === "italic") return "italic";
@@ -21,7 +21,7 @@ export const extractFontStyle = (
   return undefined;
 };
 
-export const extractTextAlign = (
+export const parseTextAlign = (
   value: string,
 ): Typography["textAlign"] | undefined => {
   if (value === "left" || value === "start") return "left";
@@ -31,7 +31,7 @@ export const extractTextAlign = (
   return undefined;
 };
 
-export const extractVerticalAlign = (
+export const parseVerticalAlign = (
   value: string,
 ): Typography["verticalAlign"] | undefined => {
   if (value === "top") return "top";
@@ -44,15 +44,15 @@ export const extractTypography = (style: CSSStyleDeclaration): Typography => {
   const typography: Typography = {
     fontFamily: sanitizeFontFamily(style.fontFamily) || DEFAULTS.FONT_FAMILY,
     fontSize: parseFloat(style.fontSize) || undefined,
-    fontWeight: extractFontWeight(style.fontWeight),
-    fontStyle: extractFontStyle(style.fontStyle),
+    fontWeight: parseFontWeight(style.fontWeight),
+    fontStyle: parseFontStyle(style.fontStyle),
     letterSpacing: parseFloat(style.letterSpacing) || undefined,
     lineHeight: parseFloat(style.lineHeight) || undefined,
     color: sanitizeColor(style.color) || undefined,
     underline: style.textDecorationLine?.includes("underline") || false,
     strikethrough: style.textDecorationLine?.includes("line-through") || false,
-    textAlign: extractTextAlign(style.textAlign),
-    verticalAlign: extractVerticalAlign(style.verticalAlign),
+    textAlign: parseTextAlign(style.textAlign),
+    verticalAlign: parseVerticalAlign(style.verticalAlign),
   };
 
   return typography;

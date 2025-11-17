@@ -65,7 +65,7 @@ export const classifyElement = (
 
   const style = win.getComputedStyle(element);
 
-  const hasVisualStyling = checkVisualStyling(style);
+  const hasVisualStyling = classifyVisualElement(style);
   if (hasVisualStyling) {
     types.push("shape");
   }
@@ -82,7 +82,7 @@ export const classifyElement = (
   return types;
 };
 
-const checkVisualStyling = (style: CSSStyleDeclaration): boolean => {
+const classifyVisualElement = (style: CSSStyleDeclaration): boolean => {
   const hasBackgroundColor =
     style.backgroundColor !== "transparent" &&
     style.backgroundColor !== "rgba(0, 0, 0, 0)";
