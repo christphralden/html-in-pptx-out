@@ -66,6 +66,8 @@ HTML → Parser → Plugins (onParse) → ElementDTOs → Plugins (onSlide) → 
 
 ### Custom Plugin
 
+Feel free to create your own plugins, apologies bcs this was made in a day
+
 ```typescript
 import { Plugin, TextElementDTO } from "html-in-pptx-out";
 
