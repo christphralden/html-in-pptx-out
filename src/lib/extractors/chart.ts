@@ -4,7 +4,7 @@ import type {
   ChartData,
   ChartSeries,
   ChartOptions,
-} from "@/types/chart.types";
+} from "@/types/plotly.types";
 import { CHART_TYPE_MAP } from "@/constants";
 
 export const detectSourceLibrary = (config: unknown): SourceLibrary => {

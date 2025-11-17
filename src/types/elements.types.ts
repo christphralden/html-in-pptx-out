@@ -10,8 +10,8 @@ import type {
   ElementType,
   Shadow,
 } from "./base.types";
-import type { ChartData, SourceLibrary } from "./chart.types";
-export type { ChartData, ChartSeries, ChartOptions, SourceLibrary } from "./chart.types";
+import type { ChartData, SourceLibrary } from "./plotly.types";
+export type { ChartData, ChartSeries, ChartOptions, SourceLibrary } from "./plotly.types";
 
 export interface TextRun {
   content: string;

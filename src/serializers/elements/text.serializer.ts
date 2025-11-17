@@ -107,7 +107,7 @@ export const serializeText = (
      * Without this, pptxgenjs uses its own default which is shit
      */
     lineSpacingMultiple: 1,
-    valign: "top",
+    // valign: "top",
     align: "left",
     isTextBox: true,
     wrap: true,

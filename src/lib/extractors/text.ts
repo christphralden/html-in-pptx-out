@@ -7,8 +7,8 @@ export const extractRuns = (node: Node): TextRun[] => {
 
   for (const child of node.childNodes) {
     if (child.nodeType === Node.TEXT_NODE) {
-      const text = child.textContent || "";
-      if (text.length > 0) {
+      const text = child.textContent?.replace(/\s+/g, " ") || "";
+      if (text.trim().length > 0) {
         runs.push({ content: text });
       }
     }

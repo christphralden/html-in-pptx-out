@@ -4,6 +4,7 @@ import PptxGenJS from "pptxgenjs";
 import { dimensionsToPercentage } from "@/utils/units";
 import { positionToPercentage } from "@/utils/units";
 import { pxToPoints } from "@/utils/units";
+import { SERIALIZER } from "@/constants";
 
 const STROKE_DASH_MAP: Record<
   string,
@@ -72,14 +73,13 @@ export const serializeShape = (
         fillProps.transparency = transparencyPercent;
       }
     } else if (element.fill.type === "gradient") {
-      /*
-       * BACKLOG: Gradient fills are not supported by pptxgenjs ShapeFillProps.
-       * The pptxgenjs library only supports solid fills (type: 'solid' | 'none').
-       * As a fallback, we use the first color stop of the gradient.
-       */
       const firstStop = element.fill.stops[0];
       if (firstStop) {
         fillProps.color = firstStop.color.toUpperCase();
+
+        if (firstStop.opacity !== undefined && firstStop.opacity < 1) {
+          fillProps.transparency = Math.round((1 - firstStop.opacity) * 100);
+        }
       }
     }
 
@@ -111,7 +111,9 @@ export const serializeShape = (
       element.dimensions.width,
       element.dimensions.height,
     );
-    const normalizedRadius = Math.min(element.borderRadius / minDimension, 1);
+    const normalizedRadius =
+      Math.min(element.borderRadius / minDimension, 1) *
+      SERIALIZER.RADIUS_MULTIPLIER;
     shapeOptions.rectRadius = normalizedRadius;
   }
 

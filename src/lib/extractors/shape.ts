@@ -7,6 +7,7 @@ import type {
   GradientStop,
 } from "@/types/base.types";
 import { sanitizeColor } from "@/utils/sanitize";
+import { parseColorOpacity } from "@/lib/extractors/color";
 
 const parseGradientStops = (rgba: string): GradientStop[] => {
   const stops: GradientStop[] = [];
@@ -26,7 +27,8 @@ const parseGradientStops = (rgba: string): GradientStop[] => {
       position = index === 0 ? 0 : 1;
     }
 
-    stops.push({ color: hex, position });
+    const opacity = parseColorOpacity(colorPart);
+    stops.push({ color: hex, position, opacity });
     index++;
   }
 
@@ -97,13 +99,12 @@ export const extractFill = (style: CSSStyleDeclaration): Fill | undefined => {
   const hex = sanitizeColor(bgColor);
   if (!hex) return undefined;
 
-  const opacityMatch = bgColor.match(/rgba?\([^)]+,\s*([\d.]+)\)/);
-  const opacity = opacityMatch ? parseFloat(opacityMatch[1]) : 1;
+  const opacity = parseColorOpacity(bgColor);
 
   const fill: SolidFill = {
     type: "solid",
     color: hex,
-    opacity: opacity < 1 ? opacity : undefined,
+    opacity: opacity,
   };
 
   return fill;

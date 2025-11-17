@@ -42,6 +42,7 @@ export interface Typography {
 export interface GradientStop {
   color: string;
   position: number;
+  opacity?: number;
 }
 
 export interface SolidFill {

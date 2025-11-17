@@ -1,6 +1,6 @@
 import type { ChartElementDTO, ChartSeries } from "@/types/elements.types";
 import { positionToInches, dimensionsToInches } from "@/utils/units";
-import { PPTX_CHART_TYPE_MAP } from "@/constants";
+import { DEFAULTS, PPTX_CHART_TYPE_MAP } from "@/constants";
 import PptxGenJS from "pptxgenjs";
 import { sanitizeColor } from "@/utils/sanitize";
 
@@ -88,10 +88,11 @@ export const transformChartToPptxGenJS = (
     h: dims.h,
     title: normalized.options?.title,
     showTitle: normalized.options?.title ? true : false,
-    titleFontSize: normalized.options?.titleFontSize || 11,
+    titleFontSize:
+      normalized.options?.titleFontSize || DEFAULTS.CHART_FONT_SIZE,
     showLegend: normalized.options?.showLegend !== false,
     legendPos: "t",
-    legendFontSize: 11,
+    legendFontSize: DEFAULTS.CHART_FONT_SIZE,
     showLabel: normalized.options?.showDataLabels === true,
   };
 
@@ -143,16 +144,16 @@ export const transformChartToPptxGenJS = (
   if (normalized.options?.xAxisTitle) {
     options.catAxisTitle = normalized.options.xAxisTitle;
     options.showCatAxisTitle = true;
-    options.catAxisTitleFontSize = 11;
+    options.catAxisTitleFontSize = DEFAULTS.CHART_FONT_SIZE;
   }
   if (normalized.options?.yAxisTitle) {
     options.valAxisTitle = normalized.options.yAxisTitle;
     options.showValAxisTitle = true;
-    options.valAxisTitleFontSize = 11;
+    options.valAxisTitleFontSize = DEFAULTS.CHART_FONT_SIZE;
   }
 
-  options.catAxisLabelFontSize = 11;
-  options.valAxisLabelFontSize = 11;
+  options.catAxisLabelFontSize = DEFAULTS.CHART_FONT_SIZE;
+  options.valAxisLabelFontSize = DEFAULTS.CHART_FONT_SIZE;
 
   options.catGridLine = { style: "none" };
   options.valGridLine = { style: "solid", size: 1, color: "D9D9D9" };
@@ -233,22 +234,22 @@ export const transformChartToPptxGenJS = (
       titleFontSize: options.titleFontSize,
       showLegend: options.showLegend,
       legendPos: "t",
-      legendFontSize: 11,
+      legendFontSize: DEFAULTS.CHART_FONT_SIZE,
       chartColors: options.chartColors,
       dataLabelFormatCode: options.dataLabelFormatCode,
       valAxes: [
         {
           valAxisTitle: normalized.options.yAxisTitle || "",
           showValAxisTitle: normalized.options.yAxisTitle ? true : false,
-          valAxisTitleFontSize: 11,
-          valAxisLabelFontSize: 11,
+          valAxisTitleFontSize: DEFAULTS.CHART_FONT_SIZE,
+          valAxisLabelFontSize: DEFAULTS.CHART_FONT_SIZE,
           valGridLine: { style: "solid", size: 1, color: "D9D9D9" },
         },
         {
           valAxisTitle: normalized.options.yAxis2Title || "",
           showValAxisTitle: false,
-          valAxisTitleFontSize: 11,
-          valAxisLabelFontSize: 11,
+          valAxisTitleFontSize: DEFAULTS.CHART_FONT_SIZE,
+          valAxisLabelFontSize: DEFAULTS.CHART_FONT_SIZE,
           valGridLine: { style: "none" },
         },
       ],
@@ -256,12 +257,12 @@ export const transformChartToPptxGenJS = (
         {
           catAxisTitle: normalized.options.xAxisTitle || "",
           showCatAxisTitle: normalized.options.xAxisTitle ? true : false,
-          catAxisTitleFontSize: 11,
-          catAxisLabelFontSize: 11,
+          catAxisTitleFontSize: DEFAULTS.CHART_FONT_SIZE,
+          catAxisLabelFontSize: DEFAULTS.CHART_FONT_SIZE,
           catGridLine: { style: "none" },
         },
         {
-          catAxisLabelFontSize: 11,
+          catAxisLabelFontSize: DEFAULTS.CHART_FONT_SIZE,
           catAxisHidden: true,
           catGridLine: { style: "none" },
         },

@@ -1,5 +1,5 @@
 import type { Plugin } from "@/types/plugin.types";
-import type { ChartData, ExtractedChart } from "@/types/chart.types";
+import type { ChartData, ExtractedChart } from "@/types/plotly.types";
 import {
   extractChartsFromHTML,
   transformPlotlyToChartData,
@@ -19,8 +19,8 @@ interface ChartPluginState {
   chartBoundsMap: Map<string, ChartBounds>;
 }
 
-export const chartPlugin: Plugin = {
-  name: "core:chart",
+export const plotlyPlugin: Plugin = {
+  name: "core:chart-plotly",
   handles: ["chart"],
   beforeParse: (html, _config, context) => {
     const parser = new DOMParser();
@@ -37,13 +37,13 @@ export const chartPlugin: Plugin = {
       chartBoundsMap: new Map(),
     };
 
-    context.state.set(chartPlugin.name, state);
+    context.state.set(plotlyPlugin.name, state);
 
     return html;
   },
 
   onParse: (element, parseContext, pluginContext) => {
-    const state = pluginContext.state.get(chartPlugin.name) as
+    const state = pluginContext.state.get(plotlyPlugin.name) as
       | ChartPluginState
       | undefined;
 
@@ -73,7 +73,7 @@ export const chartPlugin: Plugin = {
   },
 
   onSlide: (slide, context) => {
-    const state = context.state.get(chartPlugin.name) as
+    const state = context.state.get(plotlyPlugin.name) as
       | ChartPluginState
       | undefined;
 

@@ -4,7 +4,6 @@ import {
   extractFill,
   extractStroke,
   extractBorderRadius,
-  extractShadow,
 } from "@/lib/extractors/shape";
 import {
   extractRotation,
@@ -34,7 +33,6 @@ export const shapePlugin: Plugin<ShapeElementDTO> = {
       fill: extractFill(computedStyle),
       stroke: extractStroke(computedStyle),
       borderRadius: extractBorderRadius(computedStyle),
-      shadow: extractShadow(computedStyle),
       zIndex: extractZIndex(computedStyle),
       rotation: extractRotation(computedStyle),
       opacity: extractOpacity(computedStyle),

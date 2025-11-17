@@ -3,7 +3,7 @@ import { textPlugin } from "@/plugins/core/text.plugin";
 import { shapePlugin } from "@/plugins/core/shape.plugin";
 import { linePlugin } from "@/plugins/core/line.plugin";
 import { tablePlugin } from "@/plugins/core/table.plugin";
-import { chartPlugin } from "@/plugins/core/chart.plugin";
+import { plotlyPlugin } from "@/plugins/core/plotly.plugin";
 import { imagePlugin } from "@/plugins/core/image.plugin";
 
 export const ANSI = {
@@ -19,11 +19,13 @@ export const DEFAULTS = {
   SLIDE_WIDTH: 992,
   SLIDE_HEIGHT: 558,
   FONT_FAMILY: "",
+  CHART_FONT_SIZE: 10,
 } as const;
 
 export const SERIALIZER = {
   DPI: 96,
   PPTX_PIXELS_TO_INCHES: 73.7,
+  RADIUS_MULTIPLIER: 0.75,
 } as const;
 
 export const FONT_WEIGHT_SUFFIX_MAP: Record<number, string> = {
@@ -44,9 +46,9 @@ export const DEFAULT_CORE_PLUGINS: Plugin[] = [
   linePlugin,
   tablePlugin,
   imagePlugin,
-  chartPlugin,
+  plotlyPlugin,
 ];
-export const COORDINATE_BUFFER = 1.03 as const;
+export const COORDINATE_BUFFER = 1.01 as const;
 
 export const CHART_TYPE_MAP: Record<string, string> = {
   pie: "pie",

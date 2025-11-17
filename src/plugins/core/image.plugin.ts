@@ -20,7 +20,7 @@ const extractImageSrc = (element: HTMLElement): string => {
   if (tagName === "svg") {
     const serializer = new XMLSerializer();
     const svgString = serializer.serializeToString(element);
-    const base64 = btoa(svgString);
+    const base64 = btoa(unescape(encodeURIComponent(svgString)));
     return `data:image/svg+xml;base64,${base64}`;
   }
 

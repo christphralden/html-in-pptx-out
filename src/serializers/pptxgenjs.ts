@@ -8,7 +8,7 @@ import { serializeShape } from "./elements/shape.serializer";
 import { serializeLine } from "./elements/line.serializer";
 import { serializeImage } from "./elements/image.serializer";
 import { serializeTable } from "./elements/table.serializer";
-import { serializeChart } from "./elements/chart.serializer";
+import { serializeChart } from "./elements/plotly.serializer";
 import { assert } from "@/utils/assert";
 
 export class PptxSerializer implements SerializerStrategy {
