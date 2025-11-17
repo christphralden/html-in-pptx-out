@@ -1,5 +1,5 @@
-import type { TextElementDTO } from "@/types/elements.types";
-import type { Dimensions } from "@/types/base.types";
+import type { TextElementDTO, TextRun } from "@/types/elements.types";
+import type { Dimensions, Typography } from "@/types/base.types";
 import type PptxGenJS from "pptxgenjs";
 import {
   positionToPercentage,
@@ -8,7 +8,7 @@ import {
 } from "../utils/units";
 import { FONT_WEIGHT_SUFFIX_MAP } from "@/constants";
 
-const getFontFaceWithWeight = (
+const transformFontfactToPptxFontface = (
   fontFamily: string,
   fontWeight?: string,
 ): string => {
@@ -21,6 +21,92 @@ const getFontFaceWithWeight = (
   if (!suffix || suffix === "") return baseFontFace;
 
   return `${baseFontFace} ${suffix}`;
+};
+
+const transformTypographyToPptxTextProps = (
+  typo: Typography,
+): PptxGenJS.TextPropsOptions => {
+  const props: PptxGenJS.TextPropsOptions = {};
+
+  if (typo.fontFamily) {
+    props.fontFace = transformFontfactToPptxFontface(
+      typo.fontFamily,
+      typo.fontWeight,
+    );
+  }
+
+  if (typo.fontSize) {
+    props.fontSize = pxToPoints(typo.fontSize);
+  }
+
+  if (typo.color) {
+    props.color = typo.color.toUpperCase();
+  }
+
+  if (typo.fontWeight) {
+    const weight = parseInt(typo.fontWeight, 10) || 400;
+    if (weight > 400) {
+      props.bold = true;
+    }
+  }
+
+  if (typo.fontStyle === "italic" || typo.fontStyle === "oblique") {
+    props.italic = true;
+  }
+
+  if (typo.underline) {
+    props.underline = { style: "sng" };
+  }
+
+  if (typo.strikethrough) {
+    props.strike = "sngStrike";
+  }
+
+  return props;
+};
+
+const flattenRuns = (
+  runs: TextRun[],
+): Array<{ text: string; options: PptxGenJS.TextPropsOptions }> => {
+  const result: Array<{ text: string; options: PptxGenJS.TextPropsOptions }> =
+    [];
+
+  for (const run of runs) {
+    if (run.children && run.children.length > 0) {
+      const childResults = flattenRuns(run.children);
+      for (const child of childResults) {
+        const aggregatedOptions = { ...child.options };
+
+        if (run.typography) {
+          const runProps = transformTypographyToPptxTextProps(run.typography);
+          Object.assign(aggregatedOptions, runProps, child.options);
+        }
+
+        if (run.href) {
+          aggregatedOptions.hyperlink = { url: run.href };
+        }
+
+        result.push({ text: child.text, options: aggregatedOptions });
+      }
+    } else {
+      const options: PptxGenJS.TextPropsOptions = {};
+
+      if (run.typography) {
+        Object.assign(
+          options,
+          transformTypographyToPptxTextProps(run.typography),
+        );
+      }
+
+      if (run.href) {
+        options.hyperlink = { url: run.href };
+      }
+
+      result.push({ text: run.content, options: options });
+    }
+  }
+
+  return result;
 };
 
 export const serializeText = (
@@ -51,40 +137,8 @@ export const serializeText = (
 
   if (element.typography) {
     const typo = element.typography;
-
-    if (typo.fontFamily) {
-      textOptions.fontFace = getFontFaceWithWeight(
-        typo.fontFamily,
-        typo.fontWeight,
-      );
-    }
-
-    if (typo.fontSize) {
-      textOptions.fontSize = pxToPoints(typo.fontSize);
-    }
-
-    if (typo.color) {
-      textOptions.color = typo.color.toUpperCase();
-    }
-
-    if (typo.fontWeight) {
-      const weight = parseInt(typo.fontWeight, 10) || 400;
-      if (weight > 400) {
-        textOptions.bold = true;
-      }
-    }
-
-    if (typo.fontStyle === "italic" || typo.fontStyle === "oblique") {
-      textOptions.italic = true;
-    }
-
-    if (typo.underline) {
-      textOptions.underline = { style: "sng" };
-    }
-
-    if (typo.strikethrough) {
-      textOptions.strike = "sngStrike";
-    }
+    const typoProps = transformTypographyToPptxTextProps(typo);
+    Object.assign(textOptions, typoProps);
 
     if (typo.textAlign) {
       textOptions.align = typo.textAlign as
@@ -98,24 +152,18 @@ export const serializeText = (
       textOptions.valign = typo.verticalAlign as "top" | "middle" | "bottom";
     }
 
-    // if (typo.lineHeight && typo.fontSize) {
-    //   const lineSpacingMultiple = typo.lineHeight / typo.fontSize;
-    //   textOptions.lineSpacingMultiple = Math.round(lineSpacingMultiple * 2) / 2;
-    // }
-
-    if (element.padding) {
-      // left/right/top/bottom margin - or what pptxgenjs says
-      textOptions.margin = [
-        pxToPoints(element.padding.left),
-        pxToPoints(element.padding.right),
-        pxToPoints(element.padding.top),
-        pxToPoints(element.padding.bottom),
-      ];
-    }
-
     if (typo.letterSpacing) {
       textOptions.charSpacing = typo.letterSpacing;
     }
+  }
+
+  if (element.padding) {
+    textOptions.margin = [
+      pxToPoints(element.padding.left),
+      pxToPoints(element.padding.right),
+      pxToPoints(element.padding.top),
+      pxToPoints(element.padding.bottom),
+    ];
   }
 
   if (element.rotation) {
@@ -126,5 +174,11 @@ export const serializeText = (
     textOptions.transparency = Math.round((1 - element.opacity) * 100);
   }
 
-  slide.addText(element.content, textOptions);
+  if (element.runs && element.runs.length > 0) {
+    const textProps = flattenRuns(element.runs);
+    slide.addText(textProps, textOptions);
+  } else {
+    // if parser does not support runs fallback
+    slide.addText(element.content, textOptions);
+  }
 };

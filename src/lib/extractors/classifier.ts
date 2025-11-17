@@ -16,7 +16,7 @@ const TEXT_TAGS = new Set([
   "strong",
   "em",
   "b",
-  "i",
+  // "i",
   "u",
   "s",
   "small",
@@ -107,8 +107,9 @@ const checkVisualStyling = (style: CSSStyleDeclaration): boolean => {
 
 export const classifyText = (
   tagName: string,
-): "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "p" | "body" => {
+): "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "p" | "body" | null => {
   const tag = tagName.toLowerCase();
+  if (!TEXT_TAGS.has(tagName)) return null;
   if (/^h[1-6]$/.test(tag))
     return tag as "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
   if (tag === "p") return "p";

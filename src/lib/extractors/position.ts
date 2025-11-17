@@ -1,3 +1,4 @@
+import { COORDINATE_BUFFER } from "@/constants";
 import type { Position, Dimensions } from "@/types/base.types";
 
 export const extractRelativePosition = (
@@ -9,6 +10,6 @@ export const extractRelativePosition = (
 });
 
 export const extractDimensions = (rect: DOMRect): Dimensions => ({
-  width: rect.width,
+  width: rect.width * COORDINATE_BUFFER,
   height: rect.height,
 });

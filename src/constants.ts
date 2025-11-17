@@ -52,3 +52,4 @@ export const NAMED_COLORS: Record<string, string> = {
 } as const;
 
 export const DEFAULT_CORE_PLUGINS: Plugin[] = [textPlugin, shapePlugin];
+export const COORDINATE_BUFFER = 1.03 as const;

@@ -11,9 +11,19 @@ import type {
   Shadow,
 } from "./base.types";
 
+export interface TextRun {
+  content: string;
+  tagName?: string;
+  className?: string;
+  typography?: Typography;
+  href?: string;
+  children?: TextRun[];
+}
+
 export interface TextElementDTO extends Elements {
   type: Extract<ElementType, "text">;
   content: string;
+  runs?: TextRun[];
   typography?: Typography;
   textType?: "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "p" | "body";
   autoFit?: boolean;

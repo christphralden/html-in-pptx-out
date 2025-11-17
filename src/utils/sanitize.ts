@@ -1,5 +1,4 @@
 import DOMPurify from "dompurify";
-import { FONT_LIST } from "src/fontlists.generated";
 
 export const sanitizeHtml = (html: string): string => {
   return DOMPurify.sanitize(html);
@@ -12,9 +11,6 @@ export const sanitizeFontFamily = (fontFamily: string): string => {
       .replace(/^["']|["']$/g, "")
       .trim();
 
-    if (!FONT_LIST.has(f.toLowerCase())) {
-      return null;
-    }
     return f;
   });
   return fonts.filter((font) => font != null).join(", ");
