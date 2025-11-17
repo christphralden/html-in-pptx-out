@@ -1,22 +1,7 @@
 import type { LineElementDTO } from "@/types/elements.types";
 import type { Dimensions, Stroke } from "@/types/base.types";
 import type PptxGenJS from "pptxgenjs";
-
-const STROKE_DASH_MAP: Record<
-  string,
-  | "solid"
-  | "dash"
-  | "dashDot"
-  | "lgDash"
-  | "lgDashDot"
-  | "lgDashDotDot"
-  | "sysDash"
-  | "sysDot"
-> = {
-  solid: "solid",
-  dashed: "dash",
-  dotted: "sysDot",
-};
+import { STROKE_DASH_MAP } from "@/constants";
 
 const getStrokeDashType = (
   stroke: Stroke,

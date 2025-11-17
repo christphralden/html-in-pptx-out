@@ -29,6 +29,22 @@ export const SERIALIZER = {
   RADIUS_MULTIPLIER: 0.75,
 } as const;
 
+export const STROKE_DASH_MAP: Record<
+  string,
+  | "solid"
+  | "dash"
+  | "dashDot"
+  | "lgDash"
+  | "lgDashDot"
+  | "lgDashDotDot"
+  | "sysDash"
+  | "sysDot"
+> = {
+  solid: "solid",
+  dashed: "dash",
+  dotted: "sysDot",
+} as const;
+
 export const FONT_WEIGHT_SUFFIX_MAP: Record<number, string> = {
   100: "Thin",
   200: "ExtraLight",

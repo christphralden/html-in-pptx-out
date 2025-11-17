@@ -4,23 +4,7 @@ import PptxGenJS from "pptxgenjs";
 import { dimensionsToPercentage } from "@/utils/units";
 import { positionToPercentage } from "@/utils/units";
 import { pxToPoints } from "@/utils/units";
-import { SERIALIZER } from "@/constants";
-
-const STROKE_DASH_MAP: Record<
-  string,
-  | "solid"
-  | "dash"
-  | "dashDot"
-  | "lgDash"
-  | "lgDashDot"
-  | "lgDashDotDot"
-  | "sysDash"
-  | "sysDot"
-> = {
-  solid: "solid",
-  dashed: "dash",
-  dotted: "sysDot",
-};
+import { SERIALIZER, STROKE_DASH_MAP } from "@/constants";
 
 const getShapeType = (
   shape: ShapeElementDTO["shapeType"],

@@ -1,9 +1,3 @@
-import DOMPurify from "dompurify";
-
-export const sanitizeHtml = (html: string): string => {
-  return DOMPurify.sanitize(html);
-};
-
 export const sanitizeFontFamily = (fontFamily: string): string => {
   const fonts = fontFamily.split(",").map((font) => {
     const f = font
@@ -45,11 +39,4 @@ export const sanitizeColor = (color: string): string => {
   }
 
   return "";
-};
-
-export const sanitizeString = (value: string): string => {
-  return value
-    .trim()
-    .replace(/^["']|["']$/g, "")
-    .trim();
 };

@@ -5,6 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>html-in-pptx-out</title>
 
+    <script type="importmap">
+      {
+        "imports": {
+          "pptxgenjs": "https://esm.sh/pptxgenjs@3.12.0"
+        }
+      }
+    </script>
+
     <!-- styling frfr -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -310,7 +318,10 @@
         status.textContent = "converting...";
 
         try {
-          const { HtmlToPptx } = await import("../dist/index.js");
+          const distPath = window.location.hostname === "localhost"
+            ? "../dist/index.mjs"
+            : "./dist/index.mjs";
+          const { HtmlToPptx } = await import(distPath);
 
           const converter = new HtmlToPptx({
             selector: slideSelector.value || ".slide",

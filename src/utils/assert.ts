@@ -19,15 +19,3 @@ export function assertNonNull<T>(
     throw new AssertionError(message);
   }
 }
-
-export function assertNonEmpty(
-  value: string | unknown[],
-  message: string
-): void {
-  assert(value.length > 0, message);
-}
-
-export function assertValidString(value: unknown, message: string): asserts value is string {
-  assert(typeof value === 'string', message);
-  assert(value.trim().length > 0, `${message} (string is empty or whitespace)`);
-}

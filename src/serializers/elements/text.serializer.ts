@@ -138,10 +138,10 @@ export const serializeText = (
 
   if (element.padding) {
     textOptions.margin = [
-      pxToPoints(element.padding.left),
-      pxToPoints(element.padding.right),
       pxToPoints(element.padding.top),
+      pxToPoints(element.padding.right),
       pxToPoints(element.padding.bottom),
+      pxToPoints(element.padding.left),
     ];
   }
 

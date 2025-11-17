@@ -34,6 +34,7 @@ export type {
   ChartSeries,
   ChartOptions,
   TableCellDTO,
+  TextRun,
 } from "@/types/elements.types";
 
 export type {
@@ -50,6 +51,7 @@ export type {
   Stroke,
   Border,
   GradientStop,
+  Shadow,
 } from "@/types/base.types";
 
 export type {

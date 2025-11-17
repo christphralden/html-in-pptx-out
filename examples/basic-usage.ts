@@ -1,55 +1,23 @@
 import { HtmlToPptx } from "../src/index";
-import { createCustomFontPlugin } from "../src/plugins";
-
-const EXAMPLE_HTML = `
-<!DOCTYPE html>
-<html>
-<body>
-  <div class="slide">
-    <h1>First Slide</h1>
-    <p>This is the first slide content</p>
-  </div>
-
-  <div class="slide">
-    <h1>Second Slide</h1>
-    <p>This is the second slide content</p>
-    <ul>
-      <li>Point 1</li>
-      <li>Point 2</li>
-      <li>Point 3</li>
-    </ul>
-  </div>
-
-  <div class="slide">
-    <h1>Third Slide</h1>
-    <p>This is the final slide</p>
-  </div>
-</body>
-</html>
-`;
+import { readFile, writeFile } from "fs/promises";
+import { resolve } from "path";
 
 async function main() {
-  const customFont = createCustomFontPlugin({
-    fontFace: "Arial",
-    applyToAll: true,
-  });
+  const htmlPath = resolve(__dirname, "semiconductor-thesis.html");
+  const html = await readFile(htmlPath, "utf-8");
 
   const converter = new HtmlToPptx({
-    slideSelector: ".slide",
-    titleSelector: "h1",
-    contentSelector: "p",
+    selector: ".slide",
   });
 
-  await converter
-    .load(EXAMPLE_HTML)
-    .use(customFont)
-    .convert()
-    .then(() =>
-      converter.export({
-        format: "pptx",
-        filename: "example-presentation.pptx",
-      }),
-    );
+  await converter.load(html).convert();
+
+  const buffer = await converter.export({
+    format: "pptx",
+    filename: "semiconductor-thesis.pptx",
+  });
+
+  await writeFile("semiconductor-thesis.pptx", Buffer.from(buffer));
 
   console.log("Presentation created successfully!");
 }

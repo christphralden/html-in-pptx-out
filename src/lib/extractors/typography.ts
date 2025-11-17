@@ -68,10 +68,28 @@ export const extractPadding = (style: CSSStyleDeclaration): Padding => ({
 export const extractRotation = (
   style: CSSStyleDeclaration,
 ): number | undefined => {
-  const match = style.transform?.match(/rotate\(([-\d.]+)/);
-  if (!match) return undefined;
-  const deg = parseFloat(match[1]);
-  return deg || undefined;
+  const transform = style.transform;
+  if (!transform || transform === "none") return undefined;
+
+  const rotateMatch = transform.match(/rotate\(([-\d.]+)/);
+  if (rotateMatch) {
+    const deg = parseFloat(rotateMatch[1]);
+    return deg || undefined;
+  }
+
+  const matrixMatch = transform.match(/matrix\(([^)]+)\)/);
+  if (matrixMatch) {
+    const values = matrixMatch[1].split(",").map((v) => parseFloat(v.trim()));
+    if (values.length >= 2) {
+      const a = values[0];
+      const b = values[1];
+      const radians = Math.atan2(b, a);
+      const degrees = radians * (180 / Math.PI);
+      return Math.abs(degrees) < 0.01 ? undefined : degrees;
+    }
+  }
+
+  return undefined;
 };
 
 export const extractOpacity = (

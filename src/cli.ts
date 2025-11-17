@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { readFile } from "fs/promises";
+import { readFile, writeFile } from "fs/promises";
 import { resolve } from "path";
 import { HtmlToPptx } from "@/core/converter";
 import { ANSI } from "@/constants";
@@ -56,10 +56,12 @@ async function main(): Promise<void> {
 
   await converter.load(html).convert();
 
-  await converter.export({
+  const buffer = await converter.export({
     format: "pptx",
     filename: outputResolved,
   });
+
+  await writeFile(outputResolved, Buffer.from(buffer));
 
   log(`exported: ${outputResolved}`).success();
 }
