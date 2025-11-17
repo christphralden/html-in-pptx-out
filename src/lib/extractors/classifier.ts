@@ -25,6 +25,7 @@ const TEXT_TAGS = new Set([
 
 const IMAGE_TAGS = new Set(["img", "picture", "svg"]);
 const TABLE_TAGS = new Set(["table"]);
+const TABLE_INTERNAL_TAGS = new Set(["td", "th", "tr", "thead", "tbody", "tfoot", "caption", "colgroup", "col"]);
 
 export const classifyElement = (
   element: HTMLElement,
@@ -40,6 +41,10 @@ export const classifyElement = (
 
   if (TABLE_TAGS.has(tagName)) {
     types.push("table");
+    return types;
+  }
+
+  if (TABLE_INTERNAL_TAGS.has(tagName)) {
     return types;
   }
 
@@ -60,14 +65,14 @@ export const classifyElement = (
 
   const style = win.getComputedStyle(element);
 
+  const hasVisualStyling = checkVisualStyling(style);
+  if (hasVisualStyling) {
+    types.push("shape");
+  }
+
   const singleBorderSide = hasSingleBorderSide(style);
   if (singleBorderSide) {
     types.push("line");
-  }
-
-  const hasVisualStyling = checkVisualStyling(style);
-  if (hasVisualStyling && !singleBorderSide) {
-    types.push("shape");
   }
 
   if (TEXT_TAGS.has(tagName) && hasDirectTextNode(element)) {
