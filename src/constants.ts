@@ -1,6 +1,7 @@
 import { Plugin } from "@/types/plugin.types";
 import { textPlugin } from "@/plugins/core/text";
 import { shapePlugin } from "@/plugins/core/shape";
+import { linePlugin } from "@/plugins/core/line";
 
 export const ANSI = {
   reset: "\x1b[0m",
@@ -51,5 +52,5 @@ export const NAMED_COLORS: Record<string, string> = {
   transparent: "FFFFFF",
 } as const;
 
-export const DEFAULT_CORE_PLUGINS: Plugin[] = [textPlugin, shapePlugin];
+export const DEFAULT_CORE_PLUGINS: Plugin[] = [textPlugin, shapePlugin, linePlugin];
 export const COORDINATE_BUFFER = 1.03 as const;

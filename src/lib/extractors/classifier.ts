@@ -60,8 +60,13 @@ export const classifyElement = (
 
   const style = win.getComputedStyle(element);
 
+  const singleBorderSide = hasSingleBorderSide(style);
+  if (singleBorderSide) {
+    types.push("line");
+  }
+
   const hasVisualStyling = checkVisualStyling(style);
-  if (hasVisualStyling) {
+  if (hasVisualStyling && !singleBorderSide) {
     types.push("shape");
   }
 
@@ -85,12 +90,6 @@ const checkVisualStyling = (style: CSSStyleDeclaration): boolean => {
     style.borderColor !== "transparent" &&
     style.borderColor !== "rgba(0, 0, 0, 0)";
 
-  const hasSingleSideBorder =
-    parseFloat(style.borderLeftWidth) > 0 ||
-    parseFloat(style.borderRightWidth) > 0 ||
-    parseFloat(style.borderTopWidth) > 0 ||
-    parseFloat(style.borderBottomWidth) > 0;
-
   const hasShadow = style.boxShadow !== "none" && style.boxShadow !== "";
 
   const hasBorderRadius = parseFloat(style.borderRadius) > 0;
@@ -99,7 +98,6 @@ const checkVisualStyling = (style: CSSStyleDeclaration): boolean => {
     hasBackgroundColor ||
     hasBackgroundImage ||
     hasBorder ||
-    hasSingleSideBorder ||
     hasShadow ||
     hasBorderRadius
   );
@@ -148,4 +146,28 @@ const hasDirectTextNode = (element: HTMLElement): boolean => {
     }
   }
   return false;
+};
+
+export const hasSingleBorderSide = (
+  style: CSSStyleDeclaration,
+): "left" | "right" | "top" | "bottom" | null => {
+  const leftWidth = parseFloat(style.borderLeftWidth) || 0;
+  const rightWidth = parseFloat(style.borderRightWidth) || 0;
+  const topWidth = parseFloat(style.borderTopWidth) || 0;
+  const bottomWidth = parseFloat(style.borderBottomWidth) || 0;
+
+  const sides = [
+    { side: "left" as const, width: leftWidth },
+    { side: "right" as const, width: rightWidth },
+    { side: "top" as const, width: topWidth },
+    { side: "bottom" as const, width: bottomWidth },
+  ];
+
+  const activeSides = sides.filter((s) => s.width > 0);
+
+  if (activeSides.length === 1) {
+    return activeSides[0].side;
+  }
+
+  return null;
 };

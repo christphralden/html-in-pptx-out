@@ -9,6 +9,7 @@ import { serializeLine } from "./elements/line.serializer";
 import { serializeImage } from "./elements/image.serializer";
 import { serializeTable } from "./elements/table.serializer";
 import { serializeChart } from "./elements/chart.serializer";
+import { assert } from "@/utils/assert";
 
 export class PptxSerializer implements SerializerStrategy {
   private pluginManager: PluginManagerInterface | null = null;
@@ -21,6 +22,10 @@ export class PptxSerializer implements SerializerStrategy {
     presentation: PresentationDTO,
     _options: ExportConfig,
   ): Promise<ArrayBuffer> {
+    assert(
+      presentation.slides.length > 0,
+      "No slides to export. Check selector or create a slide to export",
+    );
     const pptx = new PptxGenJS();
 
     const widthInches = pxToInches(presentation.viewport.width);
