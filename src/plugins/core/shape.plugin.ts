@@ -20,7 +20,7 @@ import { classifyShape } from "@/lib/extractors/classifier";
 export const shapePlugin: Plugin<ShapeElementDTO> = {
   name: "core:shape",
   handles: ["shape"],
-  onParse: (element, parseContext) => {
+  onParse: (_element, parseContext) => {
     const { computedStyle, boundingRect, slideElement } = parseContext;
 
     const slideRect = slideElement.getBoundingClientRect();

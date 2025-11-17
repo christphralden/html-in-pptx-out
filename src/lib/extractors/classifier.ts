@@ -25,7 +25,17 @@ const TEXT_TAGS = new Set([
 
 const IMAGE_TAGS = new Set(["img", "picture", "svg"]);
 const TABLE_TAGS = new Set(["table"]);
-const TABLE_INTERNAL_TAGS = new Set(["td", "th", "tr", "thead", "tbody", "tfoot", "caption", "colgroup", "col"]);
+const TABLE_INTERNAL_TAGS = new Set([
+  "td",
+  "th",
+  "tr",
+  "thead",
+  "tbody",
+  "tfoot",
+  "caption",
+  "colgroup",
+  "col",
+]);
 
 export const classifyElement = (
   element: HTMLElement,
@@ -33,11 +43,6 @@ export const classifyElement = (
 ): ElementType[] => {
   const types: ElementType[] = [];
   const tagName = element.tagName.toLowerCase();
-
-  if (IMAGE_TAGS.has(tagName)) {
-    types.push("image");
-    return types;
-  }
 
   if (TABLE_TAGS.has(tagName)) {
     types.push("table");
@@ -48,13 +53,12 @@ export const classifyElement = (
     return types;
   }
 
-  if (tagName === "canvas") {
-    const dataChart = element.getAttribute("data-chart");
-    if (dataChart) {
-      types.push("chart");
-    } else {
-      types.push("image");
-    }
+  if (element.id.toLowerCase().includes("chart")) {
+    types.push("chart");
+  }
+
+  if (IMAGE_TAGS.has(tagName)) {
+    types.push("image");
     return types;
   }
 

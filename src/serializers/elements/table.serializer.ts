@@ -61,7 +61,6 @@ export const serializeTable = (
           bold: weight > 400,
           italic: typo.fontStyle === "italic" || typo.fontStyle === "oblique",
           underline: typo.underline ? { style: "sng" } : undefined,
-          strike: typo.strikethrough ? true : undefined,
           align: typo.textAlign as "left" | "center" | "right" | undefined,
           valign: typo.verticalAlign as "top" | "middle" | "bottom" | undefined,
         };
@@ -93,8 +92,8 @@ export const serializeTable = (
       }
 
       if (cell.border) {
-        const borderOptions: PptxGenJS.TableCellProps["border"] = [];
         const sides = ["top", "right", "bottom", "left"] as const;
+        const borderArray: PptxGenJS.BorderProps[] = [];
 
         for (const side of sides) {
           const stroke = cell.border[side];
@@ -104,15 +103,22 @@ export const serializeTable = (
               borderType = "dash";
             }
 
-            borderOptions.push({
+            borderArray.push({
               color: stroke.color.toUpperCase(),
               pt: stroke.width,
               type: borderType,
             });
           } else {
-            borderOptions.push({ type: "none" });
+            borderArray.push({ type: "none" });
           }
         }
+
+        const borderOptions = borderArray as [
+          PptxGenJS.BorderProps,
+          PptxGenJS.BorderProps,
+          PptxGenJS.BorderProps,
+          PptxGenJS.BorderProps,
+        ];
 
         cellProps.options = {
           ...cellProps.options,
@@ -140,7 +146,7 @@ export const serializeTable = (
   }
 
   if (element.headerRow) {
-    tableOptions.firstRowHeader = true;
+    tableOptions.autoPageHeaderRows = 1;
   }
 
   slide.addTable(rows, tableOptions);

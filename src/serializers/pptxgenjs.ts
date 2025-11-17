@@ -57,7 +57,7 @@ export class PptxSerializer implements SerializerStrategy {
             serializeText(slide, element, presentation.viewport);
             break;
           case "image":
-            // serializeImage(slide, element, presentation.viewport);
+            serializeImage(slide, element, presentation.viewport);
             break;
           case "shape":
             serializeShape(slide, element, presentation.viewport);
@@ -66,7 +66,7 @@ export class PptxSerializer implements SerializerStrategy {
             serializeTable(slide, element, presentation.viewport);
             break;
           case "chart":
-            // serializeChart(slide, element, presentation.viewport);
+            serializeChart(slide, element);
             break;
           case "line":
             serializeLine(slide, element, presentation.viewport);

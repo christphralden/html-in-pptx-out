@@ -4,22 +4,6 @@ import type PptxGenJS from "pptxgenjs";
 import { dimensionsToPercentage } from "@/utils/units";
 import { positionToPercentage } from "@/utils/units";
 import { pxToPoints } from "@/utils/units";
-import { FONT_WEIGHT_SUFFIX_MAP } from "@/constants";
-
-const transformFontfactToPptxFontface = (
-  fontFamily: string,
-  fontWeight?: string,
-): string => {
-  const baseFontFace = fontFamily.split(",")[0].trim();
-  if (!fontWeight) return baseFontFace;
-
-  const weight = parseInt(fontWeight, 10) || 400;
-  const suffix = FONT_WEIGHT_SUFFIX_MAP[weight];
-
-  if (!suffix || suffix === "") return baseFontFace;
-
-  return `${baseFontFace} ${suffix}`;
-};
 
 const transformTypographyToPptxTextProps = (
   typo: Typography,
@@ -27,10 +11,7 @@ const transformTypographyToPptxTextProps = (
   const props: PptxGenJS.TextPropsOptions = {};
 
   if (typo.fontFamily) {
-    props.fontFace = transformFontfactToPptxFontface(
-      typo.fontFamily,
-      typo.fontWeight,
-    );
+    props.fontFace = typo.fontFamily.split(",")[0].trim();
   }
 
   if (typo.fontSize) {

@@ -4,7 +4,6 @@ import PptxGenJS from "pptxgenjs";
 import { dimensionsToPercentage } from "@/utils/units";
 import { positionToPercentage } from "@/utils/units";
 import { pxToPoints } from "@/utils/units";
-import { pxToInches } from "@/utils/units";
 
 const STROKE_DASH_MAP: Record<
   string,

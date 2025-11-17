@@ -3,6 +3,8 @@ import { textPlugin } from "@/plugins/core/text.plugin";
 import { shapePlugin } from "@/plugins/core/shape.plugin";
 import { linePlugin } from "@/plugins/core/line.plugin";
 import { tablePlugin } from "@/plugins/core/table.plugin";
+import { chartPlugin } from "@/plugins/core/chart.plugin";
+import { imagePlugin } from "@/plugins/core/image.plugin";
 
 export const ANSI = {
   reset: "\x1b[0m",
@@ -21,6 +23,7 @@ export const DEFAULTS = {
 
 export const SERIALIZER = {
   DPI: 96,
+  PPTX_PIXELS_TO_INCHES: 73.7,
 } as const;
 
 export const FONT_WEIGHT_SUFFIX_MAP: Record<number, string> = {
@@ -35,5 +38,34 @@ export const FONT_WEIGHT_SUFFIX_MAP: Record<number, string> = {
   900: "Black",
 } as const;
 
-export const DEFAULT_CORE_PLUGINS: Plugin[] = [textPlugin, shapePlugin, linePlugin, tablePlugin];
+export const DEFAULT_CORE_PLUGINS: Plugin[] = [
+  textPlugin,
+  shapePlugin,
+  linePlugin,
+  tablePlugin,
+  imagePlugin,
+  chartPlugin,
+];
 export const COORDINATE_BUFFER = 1.03 as const;
+
+export const CHART_TYPE_MAP: Record<string, string> = {
+  pie: "pie",
+  bar: "bar",
+  line: "line",
+  scatter: "scatter",
+  area: "area",
+  doughnut: "doughnut",
+  radar: "radar",
+  bubble: "bubble",
+} as const;
+
+export const PPTX_CHART_TYPE_MAP: Record<string, string> = {
+  pie: "pie",
+  bar: "bar",
+  line: "line",
+  scatter: "line",
+  area: "area",
+  doughnut: "doughnut",
+  radar: "radar",
+  bubble: "bubble",
+} as const;

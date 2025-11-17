@@ -10,6 +10,8 @@ import type {
   ElementType,
   Shadow,
 } from "./base.types";
+import type { ChartData, SourceLibrary } from "./chart.types";
+export type { ChartData, ChartSeries, ChartOptions, SourceLibrary } from "./chart.types";
 
 export interface TextRun {
   content: string;
@@ -52,7 +54,7 @@ export interface ImageElementDTO extends Elements {
   clip?: Bounds;
 }
 
-export interface LineElementDTO extends Omit<Elements, "dimensions"> {
+export interface LineElementDTO extends Omit<Elements, "dimensions" | "position"> {
   type: Extract<ElementType, "line">;
   start: Position;
   end: Position;
@@ -78,46 +80,10 @@ export interface TableElementDTO extends Elements {
   headerColumn?: boolean;
 }
 
-export interface ChartSeries {
-  name: string;
-  values: number[];
-  color?: string;
-  colors?: string[];
-  axis?: "primary" | "secondary";
-}
-
-export interface ChartOptions {
-  title?: string;
-  showLegend?: boolean;
-  showDataLabels?: boolean;
-  xAxisTitle?: string;
-  yAxisTitle?: string;
-  secondaryYAxisTitle?: string;
-  orientation?: "vertical" | "horizontal";
-  stacking?: "none" | "stacked" | "percentStacked";
-  hole?: number;
-  is3D?: boolean;
-}
-
-export interface ChartData {
-  chartType:
-    | "bar"
-    | "line"
-    | "pie"
-    | "doughnut"
-    | "area"
-    | "scatter"
-    | "radar"
-    | "bubble";
-  series: ChartSeries[];
-  labels: string[];
-  options?: ChartOptions;
-}
-
 export interface ChartElementDTO extends Elements {
   type: Extract<ElementType, "chart">;
   data: ChartData;
-  sourceLibrary?: "plotly" | "echarts" | "chartjs" | "unknown";
+  sourceLibrary?: SourceLibrary;
   previewImage?: string;
 }
 

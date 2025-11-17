@@ -1,0 +1,1165 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+      Investment Thesis: Semiconductor Industry and AI/Datacenter Growth Through
+      2030
+    </title>
+
+    <!-- MANDATORY: Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- MANDATORY: Font Awesome 6.0+ -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.0.0/css/all.min.css"
+      rel="stylesheet"
+    />
+
+    <!-- Plotly.js for charts -->
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+    <!-- Brand fonts: Playfair Display (headlines), Inter (body) -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- MANDATORY: ppt-slide utility class -->
+    <style type="text/tailwindcss">
+      @layer utilities {
+        .ppt-slide {
+          @apply relative w-[992px] h-[558px] mx-auto p-[30px] box-border overflow-hidden mb-[40px];
+        }
+      }
+    </style>
+
+    <style>
+      h1,
+      h2,
+      h3 {
+        font-family: "Playfair Display", serif;
+      }
+      body,
+      p,
+      li,
+      td,
+      th {
+        font-family: "Inter", sans-serif;
+      }
+    </style>
+  </head>
+
+  <body class="bg-gray-50 py-8">
+    <!-- Slide 1: Title -->
+    <div class="ppt-slide flex flex-col justify-center items-center !bg-white">
+      <h1 class="text-5xl font-bold text-[#16243D] text-center mb-4">
+        Investment Thesis
+      </h1>
+      <h2 class="text-3xl text-[#16243D] text-center mb-3">
+        Semiconductor Industry and AI/Datacenter Growth Through 2030
+      </h2>
+      <p class="text-lg text-gray-600 text-center">
+        Report Date: October 27, 2025
+      </p>
+    </div>
+
+    <!-- Slide 2: Executive Summary -->
+    <div class="ppt-slide flex flex-col !bg-white">
+      <h1 class="text-3xl font-bold text-[#16243D] mb-4">Executive Summary</h1>
+      <div class="flex-1 flex flex-col justify-center">
+        <div class="mb-4">
+          <h3 class="text-lg font-semibold text-[#00B4DB] mb-2">
+            Key Investment Themes
+          </h3>
+          <ul class="text-sm space-y-2">
+            <li>
+              <i class="fas fa-microchip text-[#00B4DB] mr-2"></i
+              ><strong>NVIDIA dominance:</strong> 80-95% AI accelerator market
+              share with CUDA ecosystem moat
+            </li>
+            <li>
+              <i class="fas fa-chart-line text-[#00B4DB] mr-2"></i
+              ><strong>Hyperscaler capex surge:</strong> $245B (2024) to $360B+
+              (2025) in AI infrastructure spending
+            </li>
+            <li>
+              <i class="fas fa-bolt text-[#00B4DB] mr-2"></i
+              ><strong>Technology inflection:</strong> 2nm mass production H2
+              2025, advanced packaging, chiplet architectures
+            </li>
+            <li>
+              <i class="fas fa-plug text-[#00B4DB] mr-2"></i
+              ><strong>Power constraints:</strong> Datacenter electricity demand
+              doubling to 945 TWh by 2030
+            </li>
+          </ul>
+        </div>
+        <div class="bg-[#E0F1F9] border-l-4 border-[#00B4DB] p-4">
+          <p class="text-sm font-semibold text-[#16243D]">
+            Investment Recommendation: Strong conviction in AI semiconductor
+            thesis with selective positioning across foundries, chip designers,
+            advanced packaging, and infrastructure enablers. Risk management
+            required for geopolitical exposure, competitive threats, and
+            valuation sensitivity.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 3: Market Sizing 2024-2030 -->
+    <div class="ppt-slide flex flex-col !bg-white">
+      <h1 class="text-3xl font-bold text-[#16243D] mb-4">
+        Market Sizing and Growth Projections (2024-2030)
+      </h1>
+      <div class="flex-1 flex gap-6">
+        <div class="flex-1 flex flex-col">
+          <div class="flex-1 min-h-0" id="marketSizingChart"></div>
+        </div>
+        <div class="flex-1 flex flex-col justify-center">
+          <div class="mb-4">
+            <h3 class="text-base font-semibold text-[#00B4DB] mb-2">
+              AI Chip Market TAM
+            </h3>
+            <ul class="text-xs space-y-1">
+              <li><strong>2024:</strong> $53-83B baseline</li>
+              <li><strong>2030:</strong> $295-497B (24-35% CAGR)</li>
+              <li>
+                <strong>Segments:</strong> GPUs (60%), NPUs (growing 35% CAGR),
+                ASICs (fastest growth)
+              </li>
+            </ul>
+          </div>
+          <div class="mb-4">
+            <h3 class="text-base font-semibold text-[#00B4DB] mb-2">
+              Semiconductor Industry
+            </h3>
+            <ul class="text-xs space-y-1">
+              <li><strong>2024:</strong> $627-665B (19% growth)</li>
+              <li><strong>2030:</strong> $1 trillion milestone</li>
+              <li>
+                <strong>Gen AI chips:</strong> $125B (2024) to $150B+ (2025)
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h3 class="text-base font-semibold text-[#00B4DB] mb-2">
+              AI Infrastructure Investment
+            </h3>
+            <ul class="text-xs space-y-1">
+              <li>
+                <strong>Cumulative 2024-2030:</strong> $6.7-7T datacenter capex
+              </li>
+              <li>
+                <strong>AI-specific:</strong> $5.2T allocated infrastructure
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 4: Hyperscaler Capex Surge -->
+    <div class="ppt-slide flex flex-col !bg-white">
+      <h1 class="text-3xl font-bold text-[#16243D] mb-4">
+        Hyperscaler Capex Surge (2024-2030)
+      </h1>
+      <div class="flex-1 flex gap-6">
+        <div class="flex-1 flex flex-col">
+          <div class="flex-1 min-h-0" id="capexChart"></div>
+        </div>
+        <div class="flex-1 flex flex-col justify-center">
+          <ul class="text-sm space-y-3">
+            <li>
+              <i class="fas fa-arrow-up text-[#00B4DB] mr-2"></i
+              ><strong>2024:</strong> $245B across Amazon, Microsoft, Alphabet,
+              Meta
+            </li>
+            <li>
+              <i class="fas fa-rocket text-[#00B4DB] mr-2"></i
+              ><strong>2025:</strong> $360B+ projected (47% YoY increase)
+            </li>
+            <li>
+              <i class="fas fa-chart-bar text-[#00B4DB] mr-2"></i
+              ><strong>Q3 2024:</strong> $58.9B spent (82% YoY increase)
+            </li>
+            <li>
+              <i class="fas fa-server text-[#00B4DB] mr-2"></i
+              ><strong>2030:</strong> $6.7T total datacenter infrastructure
+              required
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 5: AI Infrastructure Demand -->
+    <div class="ppt-slide flex flex-col !bg-white">
+      <h1 class="text-3xl font-bold text-[#16243D] mb-4">
+        AI Infrastructure: Wafer Demand and Architecture Evolution
+      </h1>
+      <div class="flex-1 flex gap-6">
+        <div class="flex-1 flex flex-col justify-center">
+          <h3 class="text-base font-semibold text-[#00B4DB] mb-3">
+            Capacity Requirements by 2030
+          </h3>
+          <ul class="text-sm space-y-2">
+            <li>
+              <i class="fas fa-microchip text-[#00B4DB] mr-2"></i>Non-Gen AI
+              logic: ~15M wafers (7M >3nm, 8M ≤3nm)
+            </li>
+            <li>
+              <i class="fas fa-plus-circle text-[#00B4DB] mr-2"></i>Generative
+              AI additional: 1.2-3.6M wafers (≤3nm nodes)
+            </li>
+            <li>
+              <i class="fas fa-exclamation-triangle text-[#00B4DB] mr-2"></i
+              ><strong>Supply gap:</strong> 1-4M wafers at ≤3nm nodes
+            </li>
+            <li>
+              <i class="fas fa-industry text-[#00B4DB] mr-2"></i
+              ><strong>Fab requirements:</strong> 3-9 new logic fabs needed by
+              2030
+            </li>
+          </ul>
+        </div>
+        <div class="flex-1 flex flex-col justify-center">
+          <h3 class="text-base font-semibold text-[#00B4DB] mb-3">
+            Server Architecture Evolution
+          </h3>
+          <div class="bg-[#E0F1F9] p-4 rounded mb-3">
+            <p class="text-xs font-bold text-[#16243D] mb-2">
+              Today (2024): CPU+GPU
+            </p>
+            <ul class="text-xs space-y-1">
+              <li>Architecture: 2 CPUs + 8 GPUs</li>
+              <li>Performance: 0.16 QFLOPS</li>
+            </ul>
+          </div>
+          <div class="bg-[#00B4DB] text-white p-4 rounded">
+            <p class="text-xs font-bold mb-2">2030: CPU+AI Accelerator</p>
+            <ul class="text-xs space-y-1">
+              <li>Performance: 23.75 QFLOPS</li>
+              <li>148x improvement over 2024</li>
+              <li>ASIC chips optimized for specific AI tasks</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 6: NVIDIA Dominance -->
+    <div class="ppt-slide flex flex-col !bg-white">
+      <h1 class="text-3xl font-bold text-[#16243D] mb-4">
+        NVIDIA: Market Dominance and Financial Performance
+      </h1>
+      <div class="flex-1 flex gap-6">
+        <div class="flex-1 flex flex-col">
+          <h3 class="text-base font-semibold text-[#00B4DB] mb-3">
+            Financial Performance (FY2022-FY2024)
+          </h3>
+          <table class="w-full text-xs border-collapse">
+            <thead>
+              <tr class="bg-[#16243D] text-white">
+                <th class="py-2 px-3 text-left">Fiscal Year</th>
+                <th class="py-2 px-3 text-right">Revenue ($B)</th>
+                <th class="py-2 px-3 text-right">Net Income ($B)</th>
+                <th class="py-2 px-3 text-right">Op Margin</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="border-b">
+                <td class="py-2 px-3">FY2022</td>
+                <td class="py-2 px-3 text-right">26.9</td>
+                <td class="py-2 px-3 text-right">9.8</td>
+                <td class="py-2 px-3 text-right">37.3%</td>
+              </tr>
+              <tr class="border-b">
+                <td class="py-2 px-3">FY2023</td>
+                <td class="py-2 px-3 text-right">27.0</td>
+                <td class="py-2 px-3 text-right">4.4</td>
+                <td class="py-2 px-3 text-right">15.7%</td>
+              </tr>
+              <tr class="bg-[#E0F1F9] border-b font-semibold">
+                <td class="py-2 px-3">FY2024</td>
+                <td class="py-2 px-3 text-right">60.9</td>
+                <td class="py-2 px-3 text-right">29.8</td>
+                <td class="py-2 px-3 text-right">54.1%</td>
+              </tr>
+            </tbody>
+          </table>
+          <p class="text-xs mt-2 italic text-gray-600">
+            126% revenue growth FY22-FY24, 581% net income growth YoY in FY24
+          </p>
+        </div>
+        <div class="flex-1 flex flex-col justify-center">
+          <h3 class="text-base font-semibold text-[#00B4DB] mb-3">
+            Market Position
+          </h3>
+          <ul class="text-sm space-y-2 mb-4">
+            <li>
+              <i class="fas fa-trophy text-[#00B4DB] mr-2"></i
+              ><strong>80-95%</strong> AI accelerator market share
+            </li>
+            <li>
+              <i class="fas fa-chart-pie text-[#00B4DB] mr-2"></i
+              ><strong>92%</strong> data center GPU market
+            </li>
+            <li>
+              <i class="fas fa-server text-[#00B4DB] mr-2"></i
+              ><strong>$47.53B</strong> FY2024 Data Center revenue (78% of
+              total)
+            </li>
+          </ul>
+          <h3 class="text-base font-semibold text-[#00B4DB] mb-3">
+            Competitive Moats
+          </h3>
+          <ul class="text-xs space-y-2">
+            <li>
+              <strong>CUDA Software Ecosystem:</strong> 30+ year lock-in effect,
+              dominant developer platform
+            </li>
+            <li>
+              <strong>Performance Leadership:</strong> Blackwell next-gen
+              maintains competitive distance
+            </li>
+            <li>
+              <strong>Scale Advantages:</strong> Operating leverage driving
+              margin expansion
+            </li>
+            <li>
+              <strong>Developer Community:</strong> Extensive ecosystem with
+              comprehensive documentation
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 7: Competitive Landscape -->
+    <div class="ppt-slide flex flex-col !bg-white">
+      <h1 class="text-3xl font-bold text-[#16243D] mb-4">
+        Competitive Landscape: AMD, Intel, and Custom Silicon
+      </h1>
+      <div class="flex-1 flex flex-col">
+        <table class="w-full text-xs border-collapse">
+          <thead>
+            <tr class="bg-[#16243D] text-white">
+              <th class="py-2 px-3 text-left">Player</th>
+              <th class="py-2 px-3 text-left">Market Share</th>
+              <th class="py-2 px-3 text-left">Key Strengths</th>
+              <th class="py-2 px-3 text-left">Challenges</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="border-b">
+              <td class="py-2 px-3 font-semibold">AMD</td>
+              <td class="py-2 px-3">~4% AI GPU</td>
+              <td class="py-2 px-3">
+                MI300 series competitive; Acquired Nod.ai, Silo AI
+              </td>
+              <td class="py-2 px-3">ROCm vs CUDA gap; $800M export loss</td>
+            </tr>
+            <tr class="border-b">
+              <td class="py-2 px-3 font-semibold">Intel</td>
+              <td class="py-2 px-3"><1% AI GPU</td>
+              <td class="py-2 px-3">
+                $8.5B CHIPS funding; 18A process (1.8nm) H1 2025; GAAFET
+              </td>
+              <td class="py-2 px-3">Gaudi miss; oneAPI immature; AI lag</td>
+            </tr>
+            <tr class="border-b">
+              <td class="py-2 px-3 font-semibold">Google TPU</td>
+              <td class="py-2 px-3">Internal use</td>
+              <td class="py-2 px-3">
+                50-70% lower cost vs H100; 100% Gemini on TPUs
+              </td>
+              <td class="py-2 px-3">
+                No external customers except Apple; Limited ecosystem
+              </td>
+            </tr>
+            <tr class="border-b">
+              <td class="py-2 px-3 font-semibold">AWS Trainium</td>
+              <td class="py-2 px-3">Internal use</td>
+              <td class="py-2 px-3">
+                Trainium2: 83.2 petaflops FP8; 50% cost savings vs GPUs
+              </td>
+              <td class="py-2 px-3">
+                No Inferentia future; AWS-exclusive; No external sales
+              </td>
+            </tr>
+            <tr class="bg-[#E0F1F9]">
+              <td class="py-2 px-3 font-semibold">Microsoft Maia</td>
+              <td class="py-2 px-3">Limited deploy</td>
+              <td class="py-2 px-3">Maia 200 (TSMC 3nm, HBM4) due 2026</td>
+              <td class="py-2 px-3">
+                OpenAI-only; Disadvantaged vs Amazon/Google; Still uses
+                AMD/NVIDIA
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="mt-3 bg-[#E0F1F9] border-l-4 border-[#00B4DB] p-3">
+          <p class="text-xs">
+            <strong>Competitive Reality:</strong> Analysts predict custom
+            silicon achieving 15-20% market share as internal implementations.
+            NVIDIA maintains overwhelming dominance despite investments. Apple
+            shifted to Google TPU; Tesla abandoned Dojo for NVIDIA/AMD.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 8: TSMC Critical Enabler -->
+    <div class="ppt-slide flex flex-col !bg-white">
+      <h1 class="text-3xl font-bold text-[#16243D] mb-4">
+        TSMC: The Critical Manufacturing Enabler
+      </h1>
+      <div class="flex-1 flex gap-6">
+        <div class="flex-1 flex flex-col justify-center">
+          <h3 class="text-base font-semibold text-[#00B4DB] mb-3">
+            Manufacturing Dominance
+          </h3>
+          <ul class="text-sm space-y-2">
+            <li>
+              <i class="fas fa-microchip text-[#00B4DB] mr-2"></i
+              ><strong>51%</strong> of revenue from HPC in 2024 (up from 43% in
+              2023)
+            </li>
+            <li>
+              <i class="fas fa-chart-line text-[#00B4DB] mr-2"></i
+              ><strong>59%</strong> HPC revenue in Q1 2025 (proxy for AI demand)
+            </li>
+            <li>
+              <i class="fas fa-dollar-sign text-[#00B4DB] mr-2"></i
+              ><strong>70-80%</strong> of $38-42B 2025 capex to advanced nodes
+              (3nm/2nm)
+            </li>
+            <li>
+              <i class="fas fa-flag-usa text-[#00B4DB] mr-2"></i
+              ><strong>$165B</strong> total commitment for Phoenix semiconductor
+              investment
+            </li>
+            <li>
+              <i class="fas fa-clock text-[#00B4DB] mr-2"></i
+              ><strong>1-year</strong> fab construction in Taiwan vs 4 years in
+              Europe
+            </li>
+          </ul>
+        </div>
+        <div class="flex-1 flex flex-col justify-center">
+          <h3 class="text-base font-semibold text-[#00B4DB] mb-3">
+            Technology Leadership
+          </h3>
+          <ul class="text-sm space-y-2">
+            <li>
+              <i class="fas fa-check-circle text-[#00B4DB] mr-2"></i
+              ><strong>3nm mass production:</strong> For Apple and NVIDIA (Jan
+              2024)
+            </li>
+            <li>
+              <i class="fas fa-flask text-[#00B4DB] mr-2"></i
+              ><strong>N2 process (2nm):</strong> Risk production began July
+              2024
+            </li>
+            <li>
+              <i class="fas fa-rocket text-[#00B4DB] mr-2"></i
+              ><strong>Mass production H2 2025:</strong> 10-15% higher
+              performance at iso power
+            </li>
+            <li>
+              <i class="fas fa-bolt text-[#00B4DB] mr-2"></i
+              ><strong>Backside power delivery:</strong> Innovation in N2
+              process
+            </li>
+            <li>
+              <i class="fas fa-exclamation-triangle text-[#00B4DB] mr-2"></i
+              ><strong>Cost barrier:</strong> Only 2-3 customers at 3nm/2nm
+              nodes
+            </li>
+          </ul>
+          <div class="mt-3 bg-[#E0F1F9] border-l-4 border-[#00B4DB] p-3">
+            <p class="text-xs">
+              <strong>Investment Assessment:</strong> Critical chokepoint for
+              leading-edge AI chip production; geographically concentrated risk
+              offset by unmatched technology leadership.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 9: Technology Roadmap -->
+    <div class="ppt-slide flex flex-col !bg-white">
+      <h1 class="text-3xl font-bold text-[#16243D] mb-4">
+        Technology Roadmap: 2nm, Advanced Packaging, Chiplets
+      </h1>
+      <div class="flex-1 flex flex-col justify-between">
+        <div>
+          <h3 class="text-base font-semibold text-[#00B4DB] mb-2">
+            Next-Generation Manufacturing Nodes
+          </h3>
+          <ul class="text-xs space-y-1 mb-3">
+            <li>
+              <strong>TSMC N2 (2nm):</strong> Mass production H2 2025, first
+              GAAFET node, 10-15% higher performance at iso power, >20% higher
+              transistor density vs N3E
+            </li>
+            <li>
+              <strong>Intel 18A (1.8nm):</strong> Production targeted 2025 H1,
+              RibbonFET (Gate-All-Around), first High-NA EUV tool installed
+            </li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="text-base font-semibold text-[#00B4DB] mb-2">
+            Advanced Packaging Technologies
+          </h3>
+          <ul class="text-xs space-y-1 mb-3">
+            <li>
+              <strong>CoWoS (Chip-on-Wafer-on-Substrate):</strong> Enabling
+              next-gen AI accelerators, interposer market >$5B in 2024, TSMC 15%
+              of capex to packaging in 2025
+            </li>
+            <li>
+              <strong>3D Stacking & Hybrid Bonding:</strong> Vertically stacking
+              dies, 15% more foundry capacity allocated in 2024
+            </li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="text-base font-semibold text-[#00B4DB] mb-2">
+            Chiplet Architectures
+          </h3>
+          <ul class="text-xs space-y-1">
+            <li>
+              <strong>Modularity:</strong> CPU cores on 3nm, I/O on mature 7nm
+              for efficiency and cost reduction
+            </li>
+            <li>
+              <strong>UCIe Standard:</strong> First 3nm UCIe Die-to-Die IP
+              announced July 2024, enabling chiplet ecosystem
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 10: Power Infrastructure Crisis -->
+    <div class="ppt-slide flex flex-col !bg-white">
+      <h1 class="text-3xl font-bold text-[#16243D] mb-4">
+        Power Infrastructure: The Critical Constraint
+      </h1>
+      <div class="flex-1 flex gap-6">
+        <div class="flex-1 flex flex-col">
+          <div class="flex-1 min-h-0" id="powerDemandChart"></div>
+        </div>
+        <div class="flex-1 flex flex-col justify-center">
+          <h3 class="text-base font-semibold text-[#00B4DB] mb-3">
+            Demand Projections and Constraints
+          </h3>
+          <ul class="text-sm space-y-2">
+            <li>
+              <i class="fas fa-bolt text-[#00B4DB] mr-2"></i>Global datacenter
+              electricity: <strong>415 TWh (2024) to 945 TWh (2030)</strong>
+            </li>
+            <li>
+              <i class="fas fa-globe text-[#00B4DB] mr-2"></i>Equivalent to
+              <strong>Japan's entire electricity demand</strong>
+            </li>
+            <li>
+              <i class="fas fa-exclamation-triangle text-[#00B4DB] mr-2"></i
+              ><strong>73%</strong> of new datacenter construction already
+              pre-leased
+            </li>
+            <li>
+              <i class="fas fa-clock text-[#00B4DB] mr-2"></i>Grid
+              interconnection delays averaging <strong>7 years</strong>
+            </li>
+            <li>
+              <i class="fas fa-dollar-sign text-[#00B4DB] mr-2"></i
+              ><strong>$720B</strong> in grid upgrades needed by 2030 globally
+            </li>
+          </ul>
+          <div class="mt-3 bg-[#E0F1F9] border-l-4 border-[#00B4DB] p-3">
+            <p class="text-xs">
+              <strong>Energy Solutions:</strong> 27% of datacenters plan 100%
+              onsite power generation by 2030 (up from 1% in 2024). Tech giants
+              committing $10B+ to SMR partnerships for 2030 reactors.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 11: Geopolitical Factors -->
+    <div class="ppt-slide flex flex-col !bg-white">
+      <h1 class="text-3xl font-bold text-[#16243D] mb-4">
+        Geopolitical Factors: Export Controls and Regionalization
+      </h1>
+      <div class="flex-1 flex flex-col justify-between">
+        <div>
+          <h3 class="text-base font-semibold text-[#00B4DB] mb-2">
+            U.S. Export Controls on AI Chips to China
+          </h3>
+          <ul class="text-xs space-y-1">
+            <li>
+              <strong>Impact:</strong> NVIDIA $5.5B loss, AMD $800M, ASML/Lam
+              $7B reduction, $6.3B total 2025 revenue loss
+            </li>
+            <li>
+              <strong>China Response:</strong> Self-sufficiency push; DeepSeek
+              V3 shows 18x cost reduction with only 2,000 GPUs
+            </li>
+            <li>
+              <strong>Risks:</strong> Controls galvanize China innovation; Loss
+              of scale reduces U.S. firm R&D
+            </li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="text-base font-semibold text-[#00B4DB] mb-2">
+            CHIPS and Science Act Implementation
+          </h3>
+          <ul class="text-xs space-y-1">
+            <li>
+              <strong>Funding:</strong> $52.7B appropriated Aug 2022; TSMC
+              Arizona $165B, Intel $8.5B multi-state
+            </li>
+            <li>
+              <strong>Challenges:</strong> $52B insufficient vs Taiwan/Korea;
+              67K workforce gap by 2030; Arizona fab cost 4-5x Taiwan
+            </li>
+            <li>
+              <strong>Risks:</strong> Tariff conflicts threaten reshoring;
+              Policy outpaces supply chain adaptation
+            </li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="text-base font-semibold text-[#00B4DB] mb-2">
+            Supply Chain Fragmentation
+          </h3>
+          <ul class="text-xs space-y-1">
+            <li>
+              <strong>Trends:</strong> U.S. easing for allies (UAE, Saudi);
+              Emerging markets (Brazil, India, Israel) ramp
+            </li>
+            <li>
+              <strong>Scale:</strong> $1T in fab plants globally through 2030;
+              Nine TSMC facilities online 2025
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 12: Investment Thesis Framework -->
+    <div class="ppt-slide flex flex-col !bg-white">
+      <h1 class="text-3xl font-bold text-[#16243D] mb-4">
+        Investment Thesis Framework: Portfolio Strategy
+      </h1>
+      <div class="flex-1 flex flex-col">
+        <table class="w-full text-xs border-collapse">
+          <thead>
+            <tr class="bg-[#16243D] text-white">
+              <th class="py-2 px-3 text-left">Tier</th>
+              <th class="py-2 px-3 text-left">Company</th>
+              <th class="py-2 px-3 text-left">Allocation</th>
+              <th class="py-2 px-3 text-left">Rationale</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="bg-[#E0F1F9] border-b font-semibold">
+              <td class="py-2 px-3" rowspan="3">
+                Tier 1<br />Core Holdings<br />(50-60%)
+              </td>
+              <td class="py-2 px-3">NVIDIA</td>
+              <td class="py-2 px-3">20-25%</td>
+              <td class="py-2 px-3">
+                90% AI GPU share, $35B quarterly revenue, CUDA ecosystem moat
+              </td>
+            </tr>
+            <tr class="bg-[#E0F1F9] border-b">
+              <td class="py-2 px-3">TSMC</td>
+              <td class="py-2 px-3">15-20%</td>
+              <td class="py-2 px-3">
+                70-80% capex to advanced nodes; 59% HPC revenue Q1 2025
+              </td>
+            </tr>
+            <tr class="bg-[#E0F1F9] border-b">
+              <td class="py-2 px-3">ASML</td>
+              <td class="py-2 px-3">10-15%</td>
+              <td class="py-2 px-3">
+                Sole supplier high-NA EUV sub-3nm; lithography monopoly
+              </td>
+            </tr>
+            <tr class="border-b">
+              <td class="py-2 px-3" rowspan="3">
+                Tier 2<br />Growth Exposure<br />(25-35%)
+              </td>
+              <td class="py-2 px-3">SK hynix</td>
+              <td class="py-2 px-3">5-8%</td>
+              <td class="py-2 px-3">
+                >60% HBM market share; supply-constrained pricing power
+              </td>
+            </tr>
+            <tr class="border-b">
+              <td class="py-2 px-3">AMD</td>
+              <td class="py-2 px-3">8-10%</td>
+              <td class="py-2 px-3">
+                #2 AI GPU position, 4% share growing, ROCm developing
+              </td>
+            </tr>
+            <tr class="border-b">
+              <td class="py-2 px-3">Adv Packaging</td>
+              <td class="py-2 px-3">5-8%</td>
+              <td class="py-2 px-3">
+                15% foundry capex; chiplet integration; CoWoS, HBM, UCIe
+              </td>
+            </tr>
+            <tr class="border-b">
+              <td class="py-2 px-3" rowspan="2">
+                Tier 3<br />Geo Hedges<br />(10-20%)
+              </td>
+              <td class="py-2 px-3">Intel</td>
+              <td class="py-2 px-3">3-5%</td>
+              <td class="py-2 px-3">
+                $8.5B CHIPS funding; 18A progress; U.S. strategic manufacturing
+              </td>
+            </tr>
+            <tr class="border-b">
+              <td class="py-2 px-3">Samsung</td>
+              <td class="py-2 px-3">2-4%</td>
+              <td class="py-2 px-3">
+                3nm/2nm development; TSMC diversification; second-tier foundry
+              </td>
+            </tr>
+            <tr class="bg-[#E0F1F9]">
+              <td class="py-2 px-3" rowspan="2">
+                Tier 4<br />Infrastructure<br />(10-20%)
+              </td>
+              <td class="py-2 px-3">Power/Grid</td>
+              <td class="py-2 px-3">3-5%</td>
+              <td class="py-2 px-3">
+                $720B grid upgrade opportunity; 27% of datacenters planning
+                onsite generation by 2030
+              </td>
+            </tr>
+            <tr class="bg-[#E0F1F9]">
+              <td class="py-2 px-3">DC REITs</td>
+              <td class="py-2 px-3">2-5%</td>
+              <td class="py-2 px-3">
+                73% pre-leased construction; 26% annual growth through 2030;
+                income + growth exposure
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Slide 13: Risk Factors -->
+    <div class="ppt-slide flex flex-col !bg-white">
+      <h1 class="text-3xl font-bold text-[#16243D] mb-4">
+        Risk Factors and Mitigation Strategies
+      </h1>
+      <div class="flex-1 grid grid-cols-2 gap-3">
+        <div class="flex flex-col">
+          <h3 class="text-sm font-semibold text-[#00B4DB] mb-2">
+            Valuation & Market Timing
+          </h3>
+          <ul class="text-xs space-y-1">
+            <li>
+              <strong>Concerns:</strong> AI firms 23x forward P/E; AI bubble
+              fears; 2025 capex above historical norms
+            </li>
+            <li>
+              <strong>Mitigation:</strong> Scale into positions; Exposure to
+              revenue-converting companies; 2-3 year minimum horizon
+            </li>
+          </ul>
+        </div>
+        <div class="flex flex-col">
+          <h3 class="text-sm font-semibold text-[#00B4DB] mb-2">
+            Competitive & Technology
+          </h3>
+          <ul class="text-xs space-y-1">
+            <li>
+              <strong>Risks:</strong> Custom silicon 15-20% share potential; AMD
+              gaining MI300 traction; Open-source models 41% adoption
+            </li>
+            <li>
+              <strong>Mitigation:</strong> Recognize CUDA moat; Diversify across
+              fabless; Monitor hyperscaler custom adoption; Exposure to foundry
+              agnostic to chip designer
+            </li>
+          </ul>
+        </div>
+        <div class="flex flex-col">
+          <h3 class="text-sm font-semibold text-[#00B4DB] mb-2">
+            Geopolitical & Supply Chain
+          </h3>
+          <ul class="text-xs space-y-1">
+            <li>
+              <strong>Risks:</strong> Taiwan concentration; U.S. firms $6.3B
+              revenue loss 2025; China self-sufficiency progress; 4-5x U.S. fab
+              cost premium
+            </li>
+            <li>
+              <strong>Mitigation:</strong> Diversify geographies: TSMC + Intel +
+              Samsung; Monitor CHIPS Act progress; Recognize China TAM loss
+              structural
+            </li>
+          </ul>
+        </div>
+        <div class="flex flex-col">
+          <h3 class="text-sm font-semibold text-[#00B4DB] mb-2">
+            Infrastructure & Execution
+          </h3>
+          <ul class="text-xs space-y-1">
+            <li>
+              <strong>Risks:</strong> 7-year interconnection delays; $720B grid
+              upgrades required; U.S. 67,000 position workforce gap by 2030;
+              Extended lead times >12 months
+            </li>
+            <li>
+              <strong>Mitigation:</strong> Favor execution track records;
+              Monitor supply chain commentary; Recognize constraints slow but
+              not derail; Maintain multi-year conviction
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 14: 2030 Scenarios -->
+    <div class="ppt-slide flex flex-col !bg-white">
+      <h1 class="text-3xl font-bold text-[#16243D] mb-4">
+        Scenarios for 2030 and Investment Implications
+      </h1>
+      <div class="flex-1 flex flex-col">
+        <table class="w-full text-xs border-collapse mb-3">
+          <thead>
+            <tr class="bg-[#16243D] text-white">
+              <th class="py-2 px-3 text-left">Scenario</th>
+              <th class="py-2 px-3 text-center">Probability</th>
+              <th class="py-2 px-3 text-left">Key Assumptions</th>
+              <th class="py-2 px-3 text-left">Expected Returns</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="bg-[#E0F1F9] border-b font-semibold">
+              <td class="py-2 px-3">Base Case:<br />Structured Growth</td>
+              <td class="py-2 px-3 text-center">60%</td>
+              <td class="py-2 px-3">
+                AI capex $500-600B/yr by 2030; Semi $1T; NVIDIA 70-80% share;
+                Power limits 15-20% growth post-2027
+              </td>
+              <td class="py-2 px-3">
+                Semi index: 12-15%/yr<br />AI infra: 15-20%/yr<br />Execution-driven
+              </td>
+            </tr>
+            <tr class="border-b">
+              <td class="py-2 px-3">Bull Case:<br />AI Super-Cycle</td>
+              <td class="py-2 px-3 text-center">25%</td>
+              <td class="py-2 px-3">
+                AI capex $1T+/yr by 2030; Semi $1.5T; SMRs remove power limits;
+                Chiplet extends Moore's Law
+              </td>
+              <td class="py-2 px-3">
+                Semi index: 20-25%/yr<br />AI infra: 25-35%/yr<br />Alpha from
+                positioning
+              </td>
+            </tr>
+            <tr class="border-b">
+              <td class="py-2 px-3">Bear Case:<br />Capex Correction</td>
+              <td class="py-2 px-3 text-center">15%</td>
+              <td class="py-2 px-3">
+                Revenue fails to justify 2024-26 capex; Near-term peak; China
+                efficiency undermines; Grid delays
+              </td>
+              <td class="py-2 px-3">
+                Semi: -10% to +5% (2025-27)<br />Recovery 2028-30: 10-15%<br />Opportunistic
+                rebalance
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="bg-[#E0F1F9] border-l-4 border-[#00B4DB] p-3">
+          <p class="text-xs">
+            <strong>Portfolio Construction:</strong> Base case allocation with
+            flexibility to adjust. If Bull Case emerges: maximize exposure to AI
+            beneficiaries, expand Tier 2 positions. If Bear Case: reduce to
+            50-60% base, rotate toward quality/value, increase cash reserves for
+            opportunistic deployment.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 15: Conclusions -->
+    <div class="ppt-slide flex flex-col !bg-white">
+      <h1 class="text-3xl font-bold text-[#16243D] mb-4">
+        Conclusions and Key Takeaways
+      </h1>
+      <div class="flex-1 flex flex-col justify-center">
+        <div class="mb-4">
+          <h3 class="text-lg font-semibold text-[#00B4DB] mb-3">
+            Investment Thesis Validation
+          </h3>
+          <ul class="text-sm space-y-2">
+            <li>
+              <i class="fas fa-check-circle text-[#00B4DB] mr-2"></i
+              ><strong>TAM Expansion:</strong> AI chip 24-35% CAGR (2024-2030)
+              vs semi 6.6% CAGR
+            </li>
+            <li>
+              <i class="fas fa-chart-line text-[#00B4DB] mr-2"></i
+              ><strong>Structural Demand:</strong> $6.7T cumulative AI infra
+              through 2030; hyperscaler capex +47% YoY
+            </li>
+            <li>
+              <i class="fas fa-microchip text-[#00B4DB] mr-2"></i
+              ><strong>Technology Inflection:</strong> 2nm mass production H2
+              2025, advanced packaging, chiplet architectures
+            </li>
+            <li>
+              <i class="fas fa-shield-alt text-[#00B4DB] mr-2"></i
+              ><strong>Competitive Moats:</strong> NVIDIA CUDA, TSMC
+              manufacturing, ASML lithography monopoly
+            </li>
+            <li>
+              <i class="fas fa-calendar-check text-[#00B4DB] mr-2"></i
+              ><strong>Multi-Year Visibility:</strong> 73% datacenter
+              construction pre-leased; long lead times
+            </li>
+          </ul>
+        </div>
+        <div class="bg-[#16243D] text-white p-4 rounded">
+          <p class="text-sm font-bold mb-2">Final Investment Perspective</p>
+          <p class="text-xs">
+            The AI-driven semiconductor boom of 2024-2030 is not a speculative
+            bubble but a fundamental industrial transformation, comparable in
+            scale to electrification or internet backbone deployment.
+            Recommended strategy: Maintain strong conviction with disciplined
+            portfolio construction emphasizing core holdings in irreplaceable
+            infrastructure (NVIDIA, TSMC, ASML), selective growth exposure to
+            technology enablers (AMD, SK hynix, advanced packaging), and
+            diversification across geopolitical risks. Investment horizon:
+            Minimum 2-3 years for infrastructure build-out; optimal 5-7 years to
+            capture full technology transition cycle.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- JSON Data Islands for Charts -->
+
+    <!-- Market Sizing Chart -->
+    <script
+      type="application/json"
+      data-chart-id="marketSizingChart"
+      data-chart-type="line"
+    >
+      {
+        "data": [
+          {
+            "x": ["2024", "2025", "2026", "2027", "2028", "2029", "2030"],
+            "y": [53, 82, 123, 175, 230, 295, 380],
+            "name": "AI Chip Market ($B)",
+            "type": "scatter",
+            "mode": "lines+markers",
+            "line": { "color": "#00B4DB", "width": 3 },
+            "marker": { "size": 8, "color": "#00B4DB" }
+          },
+          {
+            "x": ["2024", "2025", "2026", "2027", "2028", "2029", "2030"],
+            "y": [665, 697, 760, 825, 900, 950, 1000],
+            "name": "Total Semiconductor ($B)",
+            "type": "scatter",
+            "mode": "lines+markers",
+            "line": { "color": "#5DC4E4", "width": 3 },
+            "marker": { "size": 8, "color": "#5DC4E4" },
+            "yaxis": "y2"
+          }
+        ],
+        "layout": {
+          "showlegend": true,
+          "legend": {
+            "x": 0.5,
+            "y": 1.15,
+            "orientation": "h",
+            "xanchor": "center",
+            "font": { "size": 11 }
+          },
+          "xaxis": {
+            "type": "category",
+            "title": "Year",
+            "titlefont": { "size": 11 },
+            "tickfont": { "size": 10 }
+          },
+          "yaxis": {
+            "title": "AI Chip Market ($B)",
+            "titlefont": { "size": 11 },
+            "tickfont": { "size": 10 },
+            "range": [0, 400],
+            "showgrid": true,
+            "gridcolor": "#E5E7EB"
+          },
+          "yaxis2": {
+            "title": "Total Semiconductor ($B)",
+            "titlefont": { "size": 11 },
+            "tickfont": { "size": 10 },
+            "overlaying": "y",
+            "side": "right",
+            "range": [0, 1050],
+            "showgrid": false
+          },
+          "margin": { "l": 60, "r": 60, "t": 10, "b": 60 },
+          "paper_bgcolor": "rgba(0,0,0,0)",
+          "plot_bgcolor": "rgba(0,0,0,0)"
+        }
+      }
+    </script>
+
+    <!-- Capex Chart -->
+    <script
+      type="application/json"
+      data-chart-id="capexChart"
+      data-chart-type="bar"
+    >
+      {
+        "data": [
+          {
+            "x": ["2024", "2025", "2026", "2027", "2028", "2029", "2030"],
+            "y": [245, 360, 420, 480, 540, 580, 620],
+            "name": "Hyperscaler Capex ($B)",
+            "type": "bar",
+            "marker": { "color": "#00B4DB" },
+            "text": [245, 360, 420, 480, 540, 580, 620],
+            "textposition": "outside",
+            "textfont": { "size": 11 }
+          }
+        ],
+        "layout": {
+          "showlegend": false,
+          "xaxis": {
+            "type": "category",
+            "title": "Year",
+            "tickfont": { "size": 11 }
+          },
+          "yaxis": {
+            "title": "Capex ($B)",
+            "titlefont": { "size": 11 },
+            "tickfont": { "size": 10 },
+            "range": [0, 650],
+            "showgrid": true,
+            "gridcolor": "#E5E7EB"
+          },
+          "margin": { "t": 10, "b": 60, "l": 60, "r": 20 },
+          "paper_bgcolor": "rgba(0,0,0,0)",
+          "plot_bgcolor": "rgba(0,0,0,0)",
+          "font": {
+            "family": "Inter, sans-serif",
+            "size": 11
+          }
+        }
+      }
+    </script>
+
+    <!-- Power Demand Chart -->
+    <script
+      type="application/json"
+      data-chart-id="powerDemandChart"
+      data-chart-type="bar"
+    >
+      {
+        "data": [
+          {
+            "x": ["2024", "2025", "2026", "2027", "2028", "2029", "2030"],
+            "y": [415, 520, 620, 710, 805, 880, 945],
+            "name": "Datacenter Electricity (TWh)",
+            "type": "bar",
+            "marker": { "color": "#00B4DB" },
+            "text": [415, 520, 620, 710, 805, 880, 945],
+            "textposition": "outside",
+            "textfont": { "size": 11 }
+          }
+        ],
+        "layout": {
+          "title": "Global Datacenter Electricity Demand",
+          "titlefont": { "size": 12 },
+          "showlegend": false,
+          "xaxis": {
+            "type": "category",
+            "title": "Year",
+            "tickfont": { "size": 11 }
+          },
+          "yaxis": {
+            "title": "Electricity (TWh)",
+            "titlefont": { "size": 11 },
+            "tickfont": { "size": 10 },
+            "range": [0, 1000],
+            "showgrid": true,
+            "gridcolor": "#E5E7EB"
+          },
+          "margin": { "t": 40, "b": 60, "l": 60, "r": 20 },
+          "paper_bgcolor": "rgba(0,0,0,0)",
+          "plot_bgcolor": "rgba(0,0,0,0)",
+          "font": {
+            "family": "Inter, sans-serif",
+            "size": 11
+          }
+        }
+      }
+    </script>
+
+    <!-- Created by: ppt-scripts.sh on 2025-10-27 16:03:31 -->
+    <script>
+      function getChartData(chartId) {
+        const script = document.querySelector(
+          `script[data-chart-id="${chartId}"]`,
+        );
+        if (!script) return null;
+        try {
+          return JSON.parse(script.textContent);
+        } catch (e) {
+          console.error(`Failed to parse chart data for ${chartId}:`, e);
+          return null;
+        }
+      }
+
+      function resizeAllCharts() {
+        document.querySelectorAll('[id$="Chart"]').forEach((chartElement) => {
+          Plotly.Plots.resize(chartElement);
+        });
+      }
+
+      document.addEventListener("DOMContentLoaded", () => {
+        const renderPromises = [];
+
+        document.querySelectorAll("script[data-chart-id]").forEach((script) => {
+          const chartId = script.getAttribute("data-chart-id");
+          const config = getChartData(chartId);
+
+          if (!config) return;
+
+          const promise = Plotly.newPlot(chartId, config.data, config.layout, {
+            displayModeBar: false,
+            responsive: true,
+          });
+
+          renderPromises.push(promise);
+        });
+
+        Promise.all(renderPromises).then(() => {
+          resizeAllCharts();
+        });
+
+        window.addEventListener("resize", resizeAllCharts);
+      });
+    </script>
+  </body>
+</html>
