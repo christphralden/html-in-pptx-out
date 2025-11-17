@@ -16,8 +16,22 @@ export const detectIconVariant = (classList: string[]): string => {
   return "solid";
 };
 
+const VARIANT_CLASSES = new Set([
+  "fa-solid",
+  "fa-regular",
+  "fa-brands",
+  "fa-light",
+  "fa-thin",
+  "fa-duotone",
+]);
+
 export const parseIconClass = (classList: string[]): string | null => {
-  return classList.find((cls) => cls.startsWith("fa-") && cls !== "fa") || null;
+  return (
+    classList.find(
+      (cls) =>
+        cls.startsWith("fa-") && cls !== "fa" && !VARIANT_CLASSES.has(cls),
+    ) || null
+  );
 };
 
 const fetchIconFromCDNInternal = async (

@@ -95,9 +95,7 @@ export const serializeShape = (
       element.dimensions.width,
       element.dimensions.height,
     );
-    const normalizedRadius =
-      Math.min(element.borderRadius / minDimension, 1) *
-      SERIALIZER.RADIUS_MULTIPLIER;
+    const normalizedRadius = Math.min(element.borderRadius / minDimension, 1);
     shapeOptions.rectRadius = normalizedRadius;
   }
 

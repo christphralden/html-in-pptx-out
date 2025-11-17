@@ -38,6 +38,23 @@ export const fontAwesomePlugin: Plugin<ImageElementDTO> = {
 
     const slideRect = slideElement.getBoundingClientRect();
 
+    const viewBoxParts = svgData.viewBox.split(" ").map(Number);
+    const svgWidth = viewBoxParts[2] || 512;
+    const svgHeight = viewBoxParts[3] || 512;
+    const svgAspectRatio = svgWidth / svgHeight;
+
+    let finalWidth = boundingRect.width;
+    let finalHeight = boundingRect.height;
+
+    const heightBasedWidth = finalHeight * svgAspectRatio;
+    const widthBasedHeight = finalWidth / svgAspectRatio;
+
+    if (heightBasedWidth <= finalWidth) {
+      finalWidth = heightBasedWidth;
+    } else {
+      finalHeight = widthBasedHeight;
+    }
+
     const imageElement: ImageElementDTO = {
       type: "image",
       originalType: "icon",
@@ -45,7 +62,7 @@ export const fontAwesomePlugin: Plugin<ImageElementDTO> = {
       src: src,
       alt: iconClass,
       position: extractRelativePosition(boundingRect, slideRect),
-      dimensions: extractDimensions(boundingRect),
+      dimensions: { width: finalWidth, height: finalHeight },
       zIndex: extractZIndex(computedStyle),
       rotation: extractRotation(computedStyle),
       opacity: extractOpacity(computedStyle),
