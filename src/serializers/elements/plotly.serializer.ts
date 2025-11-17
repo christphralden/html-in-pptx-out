@@ -50,12 +50,12 @@ const getPptxChartTypeKey = (element: ChartElementDTO): string => {
 interface ComboChartType {
   typeKey: string;
   data: ChartSeries[];
-  options: Record<string, unknown>;
+  options: PptxGenJS.IChartOpts;
 }
 
 interface TransformedChartData {
   data: ChartSeries[] | null;
-  options: Record<string, unknown>;
+  options: PptxGenJS.IChartOpts;
   chartTypesForCombo?: ComboChartType[];
   chartTypeKey: string;
 }
@@ -81,7 +81,7 @@ export const transformChartToPptxGenJS = (
     color: sanitizeColor(series.color || ""),
   }));
 
-  const options: Record<string, unknown> = {
+  const options: PptxGenJS.IChartOpts = {
     x: pos.x,
     y: pos.y,
     w: dims.w,
@@ -94,6 +94,7 @@ export const transformChartToPptxGenJS = (
     legendPos: "t",
     legendFontSize: DEFAULTS.CHART_FONT_SIZE,
     showLabel: normalized.options?.showDataLabels === true,
+    dataLabelFontSize: DEFAULTS.CHART_FONT_SIZE,
   };
 
   const showDataLabels = normalized.options?.showDataLabels === true;
@@ -224,7 +225,7 @@ export const transformChartToPptxGenJS = (
       });
     });
 
-    const globalOptions: Record<string, unknown> = {
+    const globalOptions: PptxGenJS.IChartOpts = {
       x: options.x,
       y: options.y,
       w: options.w,
@@ -237,6 +238,8 @@ export const transformChartToPptxGenJS = (
       legendFontSize: DEFAULTS.CHART_FONT_SIZE,
       chartColors: options.chartColors,
       dataLabelFormatCode: options.dataLabelFormatCode,
+      // dlbs fontsize
+      dataLabelFontSize: DEFAULTS.CHART_FONT_SIZE,
       valAxes: [
         {
           valAxisTitle: normalized.options.yAxisTitle || "",

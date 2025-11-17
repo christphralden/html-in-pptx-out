@@ -26,12 +26,6 @@ export const detectSourceLibrary = (config: unknown): SourceLibrary => {
     return "plotly";
   }
 
-  const hasEChartsStructure = Boolean(configObj.series && configObj.xAxis);
-
-  if (hasEChartsStructure) {
-    return "echarts";
-  }
-
   return "unknown";
 };
 
@@ -214,9 +208,7 @@ const extractTitleFontSize = (layout: PlotlyLayout): number | undefined => {
   return undefined;
 };
 
-const extractAxisTitle = (
-  axis: PlotlyLayout["xaxis"],
-): string | undefined => {
+const extractAxisTitle = (axis: PlotlyLayout["xaxis"]): string | undefined => {
   if (!axis || !axis.title) return undefined;
 
   if (typeof axis.title === "string") {
@@ -230,9 +222,7 @@ const extractAxisTitle = (
   return undefined;
 };
 
-export const transformPlotlyToChartData = (
-  config: PlotlyConfig,
-): ChartData => {
+export const transformPlotlyToChartData = (config: PlotlyConfig): ChartData => {
   const traces = config.data || [];
   const layout = config.layout || {};
 

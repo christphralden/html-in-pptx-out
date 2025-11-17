@@ -3,7 +3,7 @@ import type { ChartData, ExtractedChart } from "@/types/plotly.types";
 import {
   extractChartsFromHTML,
   transformPlotlyToChartData,
-} from "@/lib/extractors/chart";
+} from "@/lib/extractors/plotly";
 import { ChartElementDTO, ImageElementDTO } from "@/types/elements.types";
 
 interface ChartBounds {
