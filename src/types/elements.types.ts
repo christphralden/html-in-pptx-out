@@ -11,7 +11,12 @@ import type {
   Shadow,
 } from "./base.types";
 import type { ChartData, SourceLibrary } from "./plotly.types";
-export type { ChartData, ChartSeries, ChartOptions, SourceLibrary } from "./plotly.types";
+export type {
+  ChartData,
+  ChartSeries,
+  ChartOptions,
+  SourceLibrary,
+} from "./plotly.types";
 
 export interface TextRun {
   content: string;
@@ -54,7 +59,8 @@ export interface ImageElementDTO extends Elements {
   clip?: Bounds;
 }
 
-export interface LineElementDTO extends Omit<Elements, "dimensions" | "position"> {
+export interface LineElementDTO
+  extends Omit<Elements, "dimensions" | "position"> {
   type: Extract<ElementType, "line">;
   start: Position;
   end: Position;

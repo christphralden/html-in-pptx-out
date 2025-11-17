@@ -4,7 +4,8 @@ export type ElementType =
   | "shape"
   | "chart"
   | "table"
-  | "line";
+  | "line"
+  | "icon";
 
 export interface Position {
   left: number;
@@ -90,6 +91,7 @@ export interface Shadow {
 
 export interface Elements {
   type: ElementType;
+  originalType?: ElementType;
   id: string;
   position: Position;
   dimensions: Dimensions;

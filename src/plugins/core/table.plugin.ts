@@ -16,7 +16,8 @@ const extractCellBorder = (style: CSSStyleDeclaration): Border | undefined => {
   const bottomWidth = parseFloat(style.borderBottomWidth) || 0;
   const leftWidth = parseFloat(style.borderLeftWidth) || 0;
 
-  const hasBorder = topWidth > 0 || rightWidth > 0 || bottomWidth > 0 || leftWidth > 0;
+  const hasBorder =
+    topWidth > 0 || rightWidth > 0 || bottomWidth > 0 || leftWidth > 0;
   if (!hasBorder) return undefined;
 
   const border: Border = {};

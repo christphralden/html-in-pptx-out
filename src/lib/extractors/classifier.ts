@@ -67,6 +67,11 @@ export const classifyElement = (
     return types;
   }
 
+  if (classifyIcon(element)) {
+    types.push("icon");
+    return types;
+  }
+
   const style = win.getComputedStyle(element);
 
   const hasVisualStyling = classifyVisualElement(style);
@@ -179,4 +184,11 @@ export const hasSingleBorderSide = (
   }
 
   return null;
+};
+
+export const classifyIcon = (element: HTMLElement): boolean => {
+  if (element.tagName.toLowerCase() !== "i") return false;
+
+  const classList = Array.from(element.classList);
+  return classList.some((cls) => cls.startsWith("fa-") && cls !== "fa");
 };

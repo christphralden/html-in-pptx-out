@@ -5,6 +5,7 @@ import { linePlugin } from "@/plugins/core/line.plugin";
 import { tablePlugin } from "@/plugins/core/table.plugin";
 import { plotlyPlugin } from "@/plugins/core/plotly.plugin";
 import { imagePlugin } from "@/plugins/core/image.plugin";
+import { iconPlugin } from "@/plugins/core/icon.plugin";
 
 export const ANSI = {
   reset: "\x1b[0m",
@@ -46,9 +47,10 @@ export const DEFAULT_CORE_PLUGINS: Plugin[] = [
   linePlugin,
   tablePlugin,
   imagePlugin,
+  iconPlugin,
   plotlyPlugin,
 ];
-export const COORDINATE_BUFFER = 1.01 as const;
+export const COORDINATE_BUFFER = 1.02 as const;
 
 export const CHART_TYPE_MAP: Record<string, string> = {
   pie: "pie",
@@ -70,4 +72,26 @@ export const PPTX_CHART_TYPE_MAP: Record<string, string> = {
   doughnut: "doughnut",
   radar: "radar",
   bubble: "bubble",
+} as const;
+
+export const FA5_TO_FA6_NAMES: Record<string, string> = {
+  "check-circle": "circle-check",
+  "times-circle": "circle-xmark",
+  "exclamation-circle": "circle-exclamation",
+  "exclamation-triangle": "triangle-exclamation",
+  "shield-alt": "shield",
+  search: "magnifying-glass",
+  times: "xmark",
+  bars: "bars",
+  cog: "gear",
+  trash: "trash-can",
+  edit: "pen-to-square",
+  "external-link-alt": "arrow-up-right-from-square",
+  "arrow-alt-circle-down": "circle-down",
+  "arrow-alt-circle-up": "circle-up",
+  "arrow-alt-circle-left": "circle-left",
+  "arrow-alt-circle-right": "circle-right",
+  "sign-in-alt": "right-to-bracket",
+  "sign-out-alt": "right-from-bracket",
+  percentage: "percent",
 } as const;

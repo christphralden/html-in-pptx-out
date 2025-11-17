@@ -11,8 +11,36 @@ import {
   extractRelativePosition,
   extractDimensions,
 } from "@/lib/extractors/position";
-import { classifyText } from "@/lib/extractors/classifier";
+import { classifyText, classifyIcon } from "@/lib/extractors/classifier";
 import { extractRuns } from "@/lib/extractors/text";
+import { COORDINATE_BUFFER } from "@/constants";
+
+const adjustBoundsForInlineIcons = (
+  element: HTMLElement,
+  rect: DOMRect,
+): DOMRect => {
+  const iconElements = element.querySelectorAll<HTMLElement>("i");
+  let iconOffset = 0;
+
+  for (const icon of iconElements) {
+    if (classifyIcon(icon)) {
+      const iconRect = icon.getBoundingClientRect();
+      const width = iconRect.width;
+
+      const style = icon.ownerDocument.defaultView!.getComputedStyle(icon);
+      const marginRight = parseFloat(style.marginRight) || 0;
+
+      iconOffset += width + marginRight;
+    }
+  }
+
+  return new DOMRect(
+    rect.left + iconOffset,
+    rect.top,
+    rect.width - iconOffset,
+    rect.height,
+  );
+};
 
 export const textPlugin: Plugin<TextElementDTO> = {
   name: "core:text",
@@ -28,17 +56,22 @@ export const textPlugin: Plugin<TextElementDTO> = {
 
     const slideRect = slideElement.getBoundingClientRect();
 
+    const adjustedRect = adjustBoundsForInlineIcons(element, boundingRect);
+
+    const position = extractRelativePosition(adjustedRect, slideRect);
+    const dimensions = extractDimensions(adjustedRect, COORDINATE_BUFFER);
+
     const runs = extractRuns(element);
 
     const textElement: TextElementDTO = {
       type: "text",
       id: crypto.randomUUID(),
-      content: content,
+      content,
       runs: runs.length > 0 ? runs : undefined,
-      position: extractRelativePosition(boundingRect, slideRect),
-      dimensions: extractDimensions(boundingRect),
+      position: position,
+      dimensions: dimensions,
       typography: extractTypography(computedStyle),
-      textType: textType,
+      textType,
       padding: extractPadding(computedStyle),
       zIndex: extractZIndex(computedStyle),
       rotation: extractRotation(computedStyle),

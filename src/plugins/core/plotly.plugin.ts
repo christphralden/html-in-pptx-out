@@ -156,6 +156,7 @@ export const plotlyPlugin: Plugin = {
 
         const chartElement: ChartElementDTO = {
           type: "chart",
+          originalType: "image",
           id: crypto.randomUUID(),
           position: matchedImage.position,
           dimensions: matchedImage.dimensions,
