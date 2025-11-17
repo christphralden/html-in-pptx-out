@@ -6,6 +6,7 @@ import { positionToPercentage } from "@/utils/units";
 import { pxToPoints } from "@/utils/units";
 import { pxToInches } from "@/utils/units";
 import { FONT_WEIGHT_SUFFIX_MAP } from "@/constants";
+import { flattenRuns } from "./text.serializer";
 
 const getFontFaceWithWeight = (fontFamily: string, fontWeight?: string): string => {
   const baseFontFace = fontFamily.split(",")[0].trim();
@@ -30,7 +31,7 @@ export const serializeTable = (
   const rows: PptxGenJS.TableRow[] = element.rows.map((row) =>
     row.map((cell) => {
       const cellProps: PptxGenJS.TableCell = {
-        text: cell.text,
+        text: cell.runs && cell.runs.length > 0 ? flattenRuns(cell.runs) : cell.text,
       };
 
       if (cell.colspan) {

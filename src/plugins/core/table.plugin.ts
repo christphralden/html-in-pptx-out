@@ -8,7 +8,7 @@ import {
 } from "@/lib/extractors/position";
 import { extractStrokeFromBorder } from "@/lib/extractors/stroke";
 import { extractFill } from "@/lib/extractors/shape";
-import { extractTextContent } from "@/lib/extractors/text";
+import { extractTextContent, extractRuns } from "@/lib/extractors/text";
 
 const extractCellBorder = (style: CSSStyleDeclaration): Border | undefined => {
   const topWidth = parseFloat(style.borderTopWidth) || 0;
@@ -75,9 +75,11 @@ const parseTableCell = (cell: HTMLTableCellElement): TableCellDTO => {
     }
   }
 
+  const runs = extractRuns(cell);
   const cellDTO: TableCellDTO = {
     id: crypto.randomUUID(),
     text: extractTextContent(cell),
+    runs: runs.length > 0 ? runs : undefined,
     typography: extractTypography(style),
     fill: fill,
     border: border,

@@ -66,7 +66,7 @@ export const DEFAULT_CORE_PLUGINS: Plugin[] = [
   fontAwesomePlugin,
   plotlyPlugin,
 ];
-export const COORDINATE_BUFFER = 1.02 as const;
+export const COORDINATE_BUFFER = 1.03 as const;
 
 export const CHART_TYPE_MAP: Record<string, string> = {
   pie: "pie",

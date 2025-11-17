@@ -5,7 +5,7 @@ import { dimensionsToPercentage } from "@/utils/units";
 import { positionToPercentage } from "@/utils/units";
 import { pxToPoints } from "@/utils/units";
 
-const transformTypographyToPptxTextProps = (
+export const transformTypographyToPptxTextProps = (
   typo: Typography,
 ): PptxGenJS.TextPropsOptions => {
   const props: PptxGenJS.TextPropsOptions = {};
@@ -44,7 +44,7 @@ const transformTypographyToPptxTextProps = (
   return props;
 };
 
-const flattenRuns = (
+export const flattenRuns = (
   runs: TextRun[],
 ): Array<{ text: string; options: PptxGenJS.TextPropsOptions }> => {
   const result: Array<{ text: string; options: PptxGenJS.TextPropsOptions }> =

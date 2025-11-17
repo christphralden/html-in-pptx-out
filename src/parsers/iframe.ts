@@ -22,9 +22,20 @@ export class IframeParser implements ParserStrategy {
 
       const allElements = [slideElement, ...Array.from(children)];
 
-      const extractedTextRects: DOMRect[] = [];
+      const consumedElements = new Set<HTMLElement>();
 
       for (const child of allElements) {
+        let isConsumed = false;
+        let parent = child.parentElement;
+        while (parent && parent !== slideElement) {
+          if (consumedElements.has(parent)) {
+            isConsumed = true;
+            break;
+          }
+          parent = parent.parentElement;
+        }
+        if (isConsumed) continue;
+
         const elementTypes = classifyElement(child, iframe.contentWindow!);
         if (elementTypes.length === 0) continue;
 
@@ -33,21 +44,8 @@ export class IframeParser implements ParserStrategy {
         const tagName = child.tagName.toLowerCase();
 
         for (const elementType of elementTypes) {
-          if (elementType === "text") {
-            const isContainedInText = extractedTextRects.some((parentRect) => {
-              return (
-                boundingRect.left >= parentRect.left &&
-                boundingRect.top >= parentRect.top &&
-                boundingRect.right <= parentRect.right &&
-                boundingRect.bottom <= parentRect.bottom
-              );
-            });
-
-            if (isContainedInText) {
-              continue;
-            }
-
-            extractedTextRects.push(boundingRect);
+          if (elementType === "table" || elementType === "text") {
+            consumedElements.add(child);
           }
 
           const parseContext: ParseContext = {

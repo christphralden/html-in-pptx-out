@@ -70,6 +70,7 @@ export interface LineElementDTO
 export interface TableCellDTO {
   id: string;
   text: string;
+  runs?: TextRun[];
   colspan?: number;
   rowspan?: number;
   typography?: Typography;
