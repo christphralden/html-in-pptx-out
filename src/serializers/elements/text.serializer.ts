@@ -149,8 +149,30 @@ export const serializeText = (
     textOptions.rotate = element.rotation;
   }
 
+  if (element.vertical && element.typography?.writingMode) {
+    if (element.typography.writingMode === "vertical-rl") {
+      textOptions.vert = "vert";
+    } else if (element.typography.writingMode === "vertical-lr") {
+      textOptions.vert = "vert270";
+    }
+  }
+
   if (element.opacity !== undefined && element.opacity < 1) {
     textOptions.transparency = Math.round((1 - element.opacity) * 100);
+  }
+
+  if (element.bullet) {
+    if (element.bullet.type === "bullet") {
+      textOptions.bullet = element.bullet.indent
+        ? { indent: element.bullet.indent }
+        : true;
+    } else {
+      textOptions.bullet = {
+        type: "number",
+        indent: element.bullet.indent,
+        numberStartAt: element.bullet.numberStartAt,
+      };
+    }
   }
 
   if (element.runs && element.runs.length > 0) {

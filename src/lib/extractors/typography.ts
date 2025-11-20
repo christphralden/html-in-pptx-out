@@ -40,6 +40,15 @@ export const parseVerticalAlign = (
   return undefined;
 };
 
+export const parseWritingMode = (
+  value: string,
+): Typography["writingMode"] | undefined => {
+  if (value === "horizontal-tb") return "horizontal-tb";
+  if (value === "vertical-rl") return "vertical-rl";
+  if (value === "vertical-lr") return "vertical-lr";
+  return undefined;
+};
+
 export const extractTypography = (style: CSSStyleDeclaration): Typography => {
   const typography: Typography = {
     fontFamily: sanitizeFontFamily(style.fontFamily) || DEFAULTS.FONT_FAMILY,
@@ -53,6 +62,7 @@ export const extractTypography = (style: CSSStyleDeclaration): Typography => {
     strikethrough: style.textDecorationLine?.includes("line-through") || false,
     textAlign: parseTextAlign(style.textAlign),
     verticalAlign: parseVerticalAlign(style.verticalAlign),
+    writingMode: parseWritingMode(style.writingMode),
   };
 
   return typography;

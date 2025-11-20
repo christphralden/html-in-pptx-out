@@ -38,6 +38,7 @@ export interface Typography {
   strikethrough?: boolean;
   textAlign?: "left" | "center" | "right" | "justify";
   verticalAlign?: "top" | "middle" | "bottom";
+  writingMode?: "horizontal-tb" | "vertical-rl" | "vertical-lr";
 }
 
 export interface GradientStop {

@@ -35,6 +35,7 @@ export interface TextElementDTO extends Elements {
   textType?: "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "p" | "body";
   autoFit?: boolean;
   vertical?: boolean;
+  bullet?: { type: "bullet" | "number"; indent?: number; numberStartAt?: number };
   padding?: Padding;
 }
 

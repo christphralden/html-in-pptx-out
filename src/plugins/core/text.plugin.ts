@@ -11,9 +11,16 @@ import {
   extractRelativePosition,
   extractDimensions,
 } from "@/lib/extractors/position";
+import { extractBullet } from "@/lib/extractors/list";
 import { classifyText, classifyIcon } from "@/lib/extractors/classifier";
 import { extractRuns } from "@/lib/extractors/text";
-import { COORDINATE_BUFFER } from "@/constants";
+
+const calculateDynamicBuffer = (fontSize?: number): number => {
+  if (!fontSize) return 1.03;
+  if (fontSize < 20) return 1.03;
+  if (fontSize < 40) return 1.04;
+  return 1.06;
+};
 
 const adjustBoundsForInlineIcons = (
   element: HTMLElement,
@@ -59,9 +66,16 @@ export const textPlugin: Plugin<TextElementDTO> = {
     const adjustedRect = adjustBoundsForInlineIcons(element, boundingRect);
 
     const position = extractRelativePosition(adjustedRect, slideRect);
-    const dimensions = extractDimensions(adjustedRect, COORDINATE_BUFFER);
+    const fontSize = parseFloat(computedStyle.fontSize);
+    const buffer = calculateDynamicBuffer(fontSize);
+    const dimensions = extractDimensions(adjustedRect, buffer);
 
     const runs = extractRuns(element);
+    const typography = extractTypography(computedStyle);
+    const isVertical =
+      typography.writingMode === "vertical-rl" ||
+      typography.writingMode === "vertical-lr";
+    const bullet = extractBullet(element, computedStyle);
 
     const textElement: TextElementDTO = {
       type: "text",
@@ -70,8 +84,10 @@ export const textPlugin: Plugin<TextElementDTO> = {
       runs: runs.length > 0 ? runs : undefined,
       position: position,
       dimensions: dimensions,
-      typography: extractTypography(computedStyle),
+      typography,
       textType,
+      vertical: isVertical || undefined,
+      bullet,
       padding: extractPadding(computedStyle),
       zIndex: extractZIndex(computedStyle),
       rotation: extractRotation(computedStyle),

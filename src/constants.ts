@@ -21,6 +21,7 @@ export const DEFAULTS = {
   SLIDE_HEIGHT: 558,
   FONT_FAMILY: "",
   CHART_FONT_SIZE: 9,
+  BASE_INDENT: 10,
 } as const;
 
 export const SERIALIZER = {

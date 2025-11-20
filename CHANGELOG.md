@@ -5,6 +5,31 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.0] - 2025-11-20
+
+### Added
+
+- Vertical text support (`writing-mode: vertical-rl` and `vertical-lr`)
+- List support for `<ul>` and `<ol>` elements with bullets and numbering
+- `extractBullet` extractor for list item detection
+- `writingMode` property to Typography interface
+- `bullet` property to TextElementDTO
+- `BASE_INDENT` constant for list indentation (default: 10)
+
+### Changed
+
+- Dynamic COORDINATE_BUFFER calculation based on font size (fonts <20px: 1.03, 20-40px: 1.04, ≥40px: 1.06)
+- List items now correctly numbered sequentially using `numberStartAt`
+- List detection now checks both `<li>` element and parent `<ul>`/`<ol>` computed styles
+- Supports Tailwind `list-decimal` class on `<ul>` elements
+
+### Fixed
+
+- Text sizing now scales appropriately based on font size
+- Vertical text properly rendered with PptxGenJS `vert` property
+- Numbered lists display correct sequential numbers instead of all "1"
+- List items detect `list-style-type: decimal` from CSS
+
 ## [0.2.4] - 2025-11-18
 
 ### Changed
