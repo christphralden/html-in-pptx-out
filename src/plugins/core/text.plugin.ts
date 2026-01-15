@@ -1,5 +1,5 @@
 import type { Plugin } from "@/types/plugin.types";
-import type { TextElementDTO } from "@/types/elements.types";
+import type { TextElementDTO, TextRun } from "@/types/elements.types";
 import {
   extractTypography,
   extractPadding,
@@ -14,6 +14,23 @@ import {
 import { extractBullet } from "@/lib/extractors/list";
 import { classifyText, classifyIcon } from "@/lib/extractors/classifier";
 import { extractRuns } from "@/lib/extractors/text";
+
+const BULLET_PATTERN = /^[•◦▪▸►‣⁃\-]\s*/;
+
+const stripLeadingBullet = (text: string): string => {
+  return text.replace(BULLET_PATTERN, "");
+};
+
+const stripBulletsFromRuns = (runs: TextRun[]): TextRun[] => {
+  if (runs.length === 0) return runs;
+
+  const result = [...runs];
+  result[0] = {
+    ...result[0],
+    content: stripLeadingBullet(result[0].content),
+  };
+  return result;
+};
 
 const calculateDynamicBuffer = (fontSize?: number): number => {
   if (!fontSize) return 1.03;
@@ -77,11 +94,14 @@ export const textPlugin: Plugin<TextElementDTO> = {
       typography.writingMode === "vertical-lr";
     const bullet = extractBullet(element, computedStyle);
 
+    const finalContent = bullet ? stripLeadingBullet(content) : content;
+    const finalRuns = bullet && runs.length > 0 ? stripBulletsFromRuns(runs) : runs;
+
     const textElement: TextElementDTO = {
       type: "text",
       id: crypto.randomUUID(),
-      content,
-      runs: runs.length > 0 ? runs : undefined,
+      content: finalContent,
+      runs: finalRuns.length > 0 ? finalRuns : undefined,
       position: position,
       dimensions: dimensions,
       typography,

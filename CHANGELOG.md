@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.4.0] - 2025-01-15
+
+### Fixed
+
+- Double bullet points when HTML list items contain literal bullet characters (e.g., `<li>• Text</li>`)
+- Strip leading bullet characters from text content when PowerPoint bullet formatting is applied
+
 ## [0.3.0] - 2025-11-20
 
 ### Added
