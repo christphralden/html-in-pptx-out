@@ -113,30 +113,52 @@ export const extractFill = (style: CSSStyleDeclaration): Fill | undefined => {
 export const extractStroke = (
   style: CSSStyleDeclaration,
 ): Stroke | undefined => {
-  const borderWidth = parseFloat(style.borderWidth) || 0;
-  if (borderWidth === 0) return undefined;
+  const topWidth = parseFloat(style.borderTopWidth) || 0;
+  const rightWidth = parseFloat(style.borderRightWidth) || 0;
+  const bottomWidth = parseFloat(style.borderBottomWidth) || 0;
+  const leftWidth = parseFloat(style.borderLeftWidth) || 0;
 
-  const borderColor = style.borderColor;
-  const hex = sanitizeColor(borderColor);
+  if (topWidth === 0 && rightWidth === 0 && bottomWidth === 0 && leftWidth === 0) {
+    return undefined;
+  }
+
+  const allWidthsPresent =
+    topWidth > 0 && rightWidth > 0 && bottomWidth > 0 && leftWidth > 0;
+  const allWidthsEqual =
+    topWidth === rightWidth &&
+    rightWidth === bottomWidth &&
+    bottomWidth === leftWidth;
+
+  if (!allWidthsPresent || !allWidthsEqual) {
+    return undefined;
+  }
+
+  const allColorsEqual =
+    style.borderTopColor === style.borderRightColor &&
+    style.borderRightColor === style.borderBottomColor &&
+    style.borderBottomColor === style.borderLeftColor;
+
+  const allStylesEqual =
+    style.borderTopStyle === style.borderRightStyle &&
+    style.borderRightStyle === style.borderBottomStyle &&
+    style.borderBottomStyle === style.borderLeftStyle;
+
+  if (!allColorsEqual || !allStylesEqual) {
+    return undefined;
+  }
+
+  const hex = sanitizeColor(style.borderTopColor);
   if (!hex) return undefined;
 
-  const borderStyle = style.borderStyle;
   let strokeStyle: "solid" | "dashed" | "dotted" = "solid";
-  if (borderStyle === "dashed") strokeStyle = "dashed";
-  else if (borderStyle === "dotted") strokeStyle = "dotted";
+  if (style.borderTopStyle === "dashed") strokeStyle = "dashed";
+  else if (style.borderTopStyle === "dotted") strokeStyle = "dotted";
 
-  let opacity: number | undefined;
-  const opacityMatch = borderColor.match(/rgba?\([^)]+,\s*([\d.]+)\)/);
-  if (opacityMatch) {
-    const extractedOpacity = parseFloat(opacityMatch[1]);
-    if (extractedOpacity < 1) {
-      opacity = extractedOpacity;
-    }
-  }
+  const opacity = parseColorOpacity(style.borderTopColor);
 
   return {
     color: hex,
-    width: borderWidth,
+    width: topWidth,
     style: strokeStyle,
     opacity: opacity,
   };
