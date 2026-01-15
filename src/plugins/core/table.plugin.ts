@@ -73,6 +73,16 @@ const parseTableCell = (cell: HTMLTableCellElement): TableCellDTO => {
     if (!border) {
       border = extractCellBorder(rowStyle);
     }
+
+    const section = row.parentElement;
+    if (
+      section &&
+      (section.tagName === "THEAD" || section.tagName === "TBODY") &&
+      !fill
+    ) {
+      const sectionStyle = doc.defaultView!.getComputedStyle(section);
+      fill = extractFill(sectionStyle);
+    }
   }
 
   const runs = extractRuns(cell);
