@@ -15,7 +15,8 @@ export const extractBullet = (
   if (parent.tagName === "UL" || parent.tagName === "OL") {
     const parentStyle =
       parent.ownerDocument.defaultView!.getComputedStyle(parent);
-    const listStyleType = computedStyle.listStyleType || parentStyle.listStyleType;
+    const listStyleType =
+      computedStyle.listStyleType || parentStyle.listStyleType;
 
     const siblings = Array.from(parent.children).filter(
       (el) => el.tagName === "LI",
@@ -28,6 +29,15 @@ export const extractBullet = (
 
     if (parent.tagName === "OL") {
       return { type: "number", indent: indent, numberStartAt: index };
+    }
+
+    const isNumber = element.textContent?.trim().match(/^(\d+)[.)]/);
+    if (isNumber) {
+      return {
+        type: "number",
+        indent,
+        numberStartAt: parseInt(isNumber[1], 10),
+      };
     }
 
     return { type: "bullet", indent: indent };

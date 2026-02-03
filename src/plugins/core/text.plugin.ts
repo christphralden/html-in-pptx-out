@@ -15,19 +15,20 @@ import { extractBullet } from "@/lib/extractors/list";
 import { classifyText, classifyIcon } from "@/lib/extractors/classifier";
 import { extractRuns } from "@/lib/extractors/text";
 
-const BULLET_PATTERN = /^[•◦▪▸►‣⁃\-]\s*/;
+const BULLET_PATTERN = /^[^\p{L}\p{N}\s]\s*/u;
+const NUMBER_PATTERN = /^\d+[.)]\s*/;
 
-const stripLeadingBullet = (text: string): string => {
-  return text.replace(BULLET_PATTERN, "");
+const stripLeadingBullet = (text: string, type: "bullet" | "number"): string => {
+  return text.replace(type === "number" ? NUMBER_PATTERN : BULLET_PATTERN, "");
 };
 
-const stripBulletsFromRuns = (runs: TextRun[]): TextRun[] => {
+const stripBulletsFromRuns = (runs: TextRun[], type: "bullet" | "number"): TextRun[] => {
   if (runs.length === 0) return runs;
 
   const result = [...runs];
   result[0] = {
     ...result[0],
-    content: stripLeadingBullet(result[0].content),
+    content: stripLeadingBullet(result[0].content, type),
   };
   return result;
 };
@@ -94,8 +95,8 @@ export const textPlugin: Plugin<TextElementDTO> = {
       typography.writingMode === "vertical-lr";
     const bullet = extractBullet(element, computedStyle);
 
-    const finalContent = bullet ? stripLeadingBullet(content) : content;
-    const finalRuns = bullet && runs.length > 0 ? stripBulletsFromRuns(runs) : runs;
+    const finalContent = bullet ? stripLeadingBullet(content, bullet.type) : content;
+    const finalRuns = bullet && runs.length > 0 ? stripBulletsFromRuns(runs, bullet.type) : runs;
 
     const textElement: TextElementDTO = {
       type: "text",
