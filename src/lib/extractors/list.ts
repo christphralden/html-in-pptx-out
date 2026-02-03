@@ -31,7 +31,7 @@ export const extractBullet = (
       return { type: "number", indent: indent, numberStartAt: index };
     }
 
-    const isNumber = element.textContent?.trim().match(/^(\d+)[.)]/);
+    const isNumber = element.textContent?.trim().match(/^(\d+)[.)]\s/);
     if (isNumber) {
       return {
         type: "number",

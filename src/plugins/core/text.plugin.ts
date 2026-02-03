@@ -15,8 +15,8 @@ import { extractBullet } from "@/lib/extractors/list";
 import { classifyText, classifyIcon } from "@/lib/extractors/classifier";
 import { extractRuns } from "@/lib/extractors/text";
 
-const BULLET_PATTERN = /^[^\p{L}\p{N}\s]\s*/u;
-const NUMBER_PATTERN = /^\d+[.)]\s*/;
+const BULLET_PATTERN = /^[^\p{L}\p{N}\s]\s+/u;
+const NUMBER_PATTERN = /^\d+[.)]\s+/;
 
 const stripLeadingBullet = (text: string, type: "bullet" | "number"): string => {
   return text.replace(type === "number" ? NUMBER_PATTERN : BULLET_PATTERN, "");
