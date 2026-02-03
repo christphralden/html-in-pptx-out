@@ -1,6 +1,6 @@
 {
   "name": "html-in-pptx-out",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "Convert HTML to PowerPoint presentations with a flexible plugin architecture",
   "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",
